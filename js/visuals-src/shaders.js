@@ -10,6 +10,7 @@ export const vertexShader = /* glsl */ `
   attribute vec2 aCranePivot;
 
   uniform float uTime;
+  uniform float uCraneTime;
   uniform float uForce;
   uniform vec2 uMouse;
   uniform vec2 uBurstCenter;
@@ -22,6 +23,10 @@ export const vertexShader = /* glsl */ `
   varying float vTone;
   varying float vCrane;
   varying vec3 vWorldPosition;
+
+  float craneRandom(float seed) {
+    return fract(sin(seed * 127.1 + 78.233) * 43758.5453);
+  }
 
   vec3 rotateAxis(vec3 point, vec3 axis, float angle) {
     float c = cos(angle);
@@ -57,17 +62,23 @@ export const vertexShader = /* glsl */ `
 
     vec3 transformed = aCenter + local;
     if (aCraneRole > 0.5 && aCraneRole < 2.5) {
-      float phase = aCranePivot.x * 2.37;
-      // Project a slow mast-centered sweep onto the skyline plane. Keeping
-      // every vertex at its original depth prevents thin trusses from crossing
-      // and flickering as the jib swings left and right.
-      float sweep = 0.70 + 0.23 * sin(uTime * (0.22 + 0.035 * sin(phase)) + phase);
+      float seed = aCranePivot.x * 2.37;
+      float cycle = floor(uCraneTime / 11.0);
+      float elapsed = mod(uCraneTime, 11.0);
+      // Each crane holds for one to four seconds, then eases toward a new
+      // random orientation. Consecutive cycles share endpoints, so they
+      // never jump or flicker at the boundary.
+      float pause = 1.0 + 3.0 * craneRandom(seed + cycle * 13.1);
+      float travel = smoothstep(pause, 11.0, elapsed);
+      float startSweep = 0.50 + 0.43 * craneRandom(seed + cycle * 17.11);
+      float endSweep = 0.50 + 0.43 * craneRandom(seed + (cycle + 1.0) * 17.11);
+      float sweep = mix(startSweep, endSweep, travel);
       transformed.x = aCranePivot.x + (transformed.x - aCranePivot.x) * sweep;
       if (aCraneRole > 1.5) {
-        // The cable top stays attached to the jib while its hook is lowered.
         float lower = smoothstep(0.02, 0.52, aCranePivot.y - 0.03 - position.y);
-        float lift = 0.14 + 0.14 * sin(uTime * (0.20 + 0.04 * cos(phase)) + phase * 1.7);
-        transformed.y -= lower * lift;
+        float startLift = 0.02 + 0.26 * craneRandom(seed + cycle * 23.7);
+        float endLift = 0.02 + 0.26 * craneRandom(seed + (cycle + 1.0) * 23.7);
+        transformed.y -= lower * mix(startLift, endLift, travel);
       }
     }
     transformed += offset;
@@ -147,7 +158,7 @@ export const fragmentShader = /* glsl */ `
     float glint = pow(max(dot(normalize(vNormal), normalize(vec3(0.35, 0.65, 0.62))), 0.0), 7.0);
     color += glint * 0.07 * pearl;
     // Every mast, jib, cab, cable, and hook uses one uninterrupted yellow.
-    if (vCrane > 0.5) color = vec3(0.87, 0.61, 0.19);
+    if (vCrane > 0.5) color = vec3(0.890, 0.569, 0.188);
     gl_FragColor = vec4(color, 1.0);
   }
 `;

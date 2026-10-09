@@ -29,6 +29,7 @@ if (stage) {
     scene.add(group);
     const uniforms = {
       uTime: { value: 0 },
+      uCraneTime: { value: 0 },
       uForce: { value: 2.25 },
       uMouse: { value: new THREE.Vector2(100, 100) },
       uBurstCenter: { value: new THREE.Vector2() },
@@ -84,6 +85,7 @@ if (stage) {
     let introStartedAt = 0;
 
     function scatterForEntry() {
+      uniforms.uCraneTime.value = 0;
       if (reducedMotion) return;
       for (let i = 0; i < triangleCount; i++) {
         if (!movable[i]) continue;
@@ -215,6 +217,7 @@ if (stage) {
       if (!introStartedAt) introStartedAt = now;
       if (reducedMotion) return;
       uniforms.uTime.value += dt;
+      uniforms.uCraneTime.value += dt;
       if (now >= nextAutoBurstAt && heldId === null) {
         const face = Math.floor(Math.random() * triangleCount);
         triggerBurst(new THREE.Vector2(faceCenters[face * 2], faceCenters[face * 2 + 1]), 1000);
