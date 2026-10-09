@@ -38,7 +38,7 @@ export function initWorkflowScene(canvas) {
   function resize() {
     width = section.clientWidth;
     height = section.clientHeight;
-    const pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+    const pixelRatio = Math.min(window.devicePixelRatio || 1, 1.25);
     canvas.width = Math.round(width * pixelRatio);
     canvas.height = Math.round(height * pixelRatio);
     context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
@@ -175,7 +175,7 @@ export function initWorkflowScene(canvas) {
   function tick(now) {
     if (!visible || reducedMotion) return;
     frame = requestAnimationFrame(tick);
-    if (now - lastFrame < 33) return;
+    if (now - lastFrame < 66) return;
     lastFrame = now;
     draw(now * 0.001);
   }
@@ -185,15 +185,24 @@ export function initWorkflowScene(canvas) {
     pointer.x = event.clientX - bounds.left;
     pointer.y = event.clientY - bounds.top;
     pointer.active = true;
-    if (reducedMotion) draw(0);
+    if (reducedMotion && visible) draw(0);
   });
   window.addEventListener('pointerleave', () => { pointer.active = false; });
   new ResizeObserver(resize).observe(section);
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      cancelAnimationFrame(frame);
+      frame = 0;
+    } else if (visible && !reducedMotion && !frame) {
+      lastFrame = 0;
+      frame = requestAnimationFrame(tick);
+    }
+  });
   new IntersectionObserver(([entry]) => {
     visible = entry.isIntersecting;
     if (visible) {
       if (reducedMotion) draw(0);
-      else if (!frame) frame = requestAnimationFrame(tick);
+      else if (!document.hidden && !frame) frame = requestAnimationFrame(tick);
     } else {
       cancelAnimationFrame(frame);
       frame = 0;

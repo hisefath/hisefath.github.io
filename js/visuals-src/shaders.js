@@ -6,6 +6,8 @@ export const vertexShader = /* glsl */ `
   attribute float aBurstWeight;
   attribute float aKind;
   attribute float aTone;
+  attribute float aCraneRole;
+  attribute vec3 aCranePivot;
 
   uniform float uTime;
   uniform float uForce;
@@ -53,6 +55,19 @@ export const vertexShader = /* glsl */ `
     offset.xy += scatter * 0.085 * vec2(sin(uTime * 2.3 + aSeed.x * 19.0), cos(uTime * 2.0 + aSeed.y * 17.0));
 
     vec3 transformed = aCenter + local + offset;
+    if (aCraneRole > 0.5) {
+      // Slow mast-centered slewing; each crane gets a different phase.
+      float phase = aCranePivot.x * 2.37;
+      float slew = 0.24 * sin(uTime * (0.10 + 0.015 * sin(phase)) + phase);
+      vec3 arm = transformed - aCranePivot;
+      transformed.x = aCranePivot.x + arm.x * cos(slew) + arm.z * sin(slew);
+      transformed.z = aCranePivot.z - arm.x * sin(slew) + arm.z * cos(slew);
+      if (aCraneRole > 1.5) {
+        // Keep the cable top fixed while the hook slowly rises and falls.
+        float lower = smoothstep(0.02, 0.52, aCranePivot.y - 0.03 - position.y);
+        transformed.y -= lower * (0.15 + 0.13 * sin(uTime * 0.18 + phase * 1.7));
+      }
+    }
     vBarycentric = aBarycentric;
     vNormal = normalize(rotateAxis(normal, axis, angle));
     vInfluence = influence;
