@@ -258,17 +258,22 @@ if (stage) {
         const target = Math.max(proximity, burst, hold, introElapsed < 380 ? values[i] : 0);
         const pulse = Math.max(burst, hold);
         burstWeights[i] = introActive && !hoverActive && !burstActive && !holdActive ? 1 : Math.max(pulse / (pulse + proximity + .0001), burstWeights[i] * Math.exp(-dt * 3.3));
-        const returning = target < values[i];
-        const tail = returning ? 1 - THREE.MathUtils.smoothstep(Math.abs(values[i]), .10, .55) : 0;
-        const stiffness = introActive && returning ? 8 + tail * 30 : returning ? 3.4 + tail * 42 : 48;
-        // Exact critically damped step: the motion keeps its real duration even
-        // if a device renders fewer frames during WebGL startup or a burst.
-        const omega = Math.sqrt(stiffness);
         const displacement = values[i] - target;
+        const returning = displacement > 0;
+        // Increase the pull toward the original mesh as each shard gets close.
+        // The slow opening of the return remains, but the last stretch accelerates
+        // into place instead of drifting through a long, soft tail.
+        const closeness = returning ? 1 - THREE.MathUtils.smoothstep(displacement, .08, .78) : 0;
+        const gravity = closeness * closeness;
+        const stiffness = returning ? (introActive ? 6 : 3.4) + gravity * 65 : 48;
+        const step = returning ? dt * (1 + gravity * 2.2) : dt;
+        // Exact critically damped step at the adjusted rate stays stable even
+        // when a frame arrives late, and avoids an overshooting snap.
+        const omega = Math.sqrt(stiffness);
         const motion = velocities[i] + omega * displacement;
-        const decay = Math.exp(-omega * dt);
-        values[i] = target + (displacement + motion * dt) * decay;
-        velocities[i] = (velocities[i] - omega * motion * dt) * decay;
+        const decay = Math.exp(-omega * step);
+        values[i] = target + (displacement + motion * step) * decay;
+        velocities[i] = (velocities[i] - omega * motion * step) * decay;
         if (Math.abs(values[i]) < .012 && Math.abs(velocities[i]) < .04 && target === 0) values[i] = velocities[i] = 0;
         const value = Math.max(0, values[i]);
         for (let j = 0; j < 3; j++) {
