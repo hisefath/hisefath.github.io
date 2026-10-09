@@ -20,6 +20,7 @@ export const vertexShader = /* glsl */ `
   varying float vSeed;
   varying float vKind;
   varying float vTone;
+  varying float vCrane;
   varying vec3 vWorldPosition;
 
   vec3 rotateAxis(vec3 point, vec3 axis, float angle) {
@@ -55,7 +56,7 @@ export const vertexShader = /* glsl */ `
     offset.xy += scatter * 0.085 * vec2(sin(uTime * 2.3 + aSeed.x * 19.0), cos(uTime * 2.0 + aSeed.y * 17.0));
 
     vec3 transformed = aCenter + local;
-    if (aCraneRole > 0.5) {
+    if (aCraneRole > 0.5 && aCraneRole < 2.5) {
       float phase = aCranePivot.x * 2.37;
       // Project a slow mast-centered sweep onto the skyline plane. Keeping
       // every vertex at its original depth prevents thin trusses from crossing
@@ -76,6 +77,7 @@ export const vertexShader = /* glsl */ `
     vSeed = aSeed.x;
     vKind = aKind;
     vTone = aTone;
+    vCrane = step(0.5, aCraneRole);
     vWorldPosition = transformed;
     gl_Position = projectionMatrix * modelViewMatrix * vec4(transformed, 1.0);
   }
@@ -91,6 +93,7 @@ export const fragmentShader = /* glsl */ `
   varying float vSeed;
   varying float vKind;
   varying float vTone;
+  varying float vCrane;
   varying vec3 vWorldPosition;
 
   void main() {
@@ -143,6 +146,8 @@ export const fragmentShader = /* glsl */ `
 
     float glint = pow(max(dot(normalize(vNormal), normalize(vec3(0.35, 0.65, 0.62))), 0.0), 7.0);
     color += glint * 0.07 * pearl;
+    // Every mast, jib, cab, cable, and hook uses one uninterrupted yellow.
+    if (vCrane > 0.5) color = vec3(0.87, 0.61, 0.19);
     gl_FragColor = vec4(color, 1.0);
   }
 `;
