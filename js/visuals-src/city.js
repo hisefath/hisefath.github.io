@@ -21,12 +21,13 @@ export function createCityGeometry() {
   let craneRole = 0;
   let cranePivot = [0, 0];
   let faceIndex = 0;
+  let landmarkShiftX = 0;
 
   function triangle(a, b, c, kind, tone = 0.5) {
-    const center = [(a[0] + b[0] + c[0]) / 3, (a[1] + b[1] + c[1]) / 3, (a[2] + b[2] + c[2]) / 3];
+    const center = [(a[0] + b[0] + c[0]) / 3 + landmarkShiftX, (a[1] + b[1] + c[1]) / 3, (a[2] + b[2] + c[2]) / 3];
     const seed = [hash(faceIndex + 1), hash(faceIndex + 329), hash(faceIndex + 1789)];
     for (const [vertexIndex, point] of [a, b, c].entries()) {
-      positions.push(...point);
+      positions.push(point[0] + landmarkShiftX, point[1], point[2]);
       centers.push(...center);
       seeds.push(...seed);
       barycentrics.push(vertexIndex === 0 ? 1 : 0, vertexIndex === 1 ? 1 : 0, vertexIndex === 2 ? 1 : 0);
@@ -172,19 +173,20 @@ export function createCityGeometry() {
     return top;
   }
 
-  function crane(x, mastHeight, jibLength, direction = 1, z = 0.52) {
-    const mastTop = BASE + mastHeight;
+  function crane(x, mastHeight, jibLength, direction = 1, z = 0.52, baseOffset = 0) {
+    const mastBase = BASE + baseOffset;
+    const mastTop = mastBase + mastHeight;
     const jibEnd = x + jibLength * direction;
     const tail = x - jibLength * direction * 0.38;
     const mastLeft = x - 0.055;
     const mastRight = x + 0.055;
     craneRole = 3; // Static mast, with the same color as the moving jib.
-    beam([mastLeft, BASE], [mastLeft, mastTop], 0.019, z, 5, 0.52);
-    beam([mastRight, BASE], [mastRight, mastTop], 0.019, z, 5, 0.52);
+    beam([mastLeft, mastBase], [mastLeft, mastTop], 0.019, z, 5, 0.52);
+    beam([mastRight, mastBase], [mastRight, mastTop], 0.019, z, 5, 0.52);
     const mastLevels = Math.max(5, Math.ceil(mastHeight / 0.23));
     for (let level = 0; level < mastLevels; level++) {
-      const y0 = BASE + mastHeight * level / mastLevels;
-      const y1 = BASE + mastHeight * (level + 1) / mastLevels;
+      const y0 = mastBase + mastHeight * level / mastLevels;
+      const y1 = mastBase + mastHeight * (level + 1) / mastLevels;
       beam([mastLeft, y0], [mastRight, y0], 0.011, z + 0.02, 6, 0.45);
       beam(level % 2 ? [mastRight, y0] : [mastLeft, y0], level % 2 ? [mastLeft, y1] : [mastRight, y1], 0.009, z + 0.025, 6, 0.49);
     }
@@ -245,15 +247,15 @@ export function createCityGeometry() {
     return points;
   }
 
-  // The sequence runs left to right as New York, Dallas, Austin, Seattle;
-  // read from right to left it is Seattle, Austin, Dallas, New York.
+  // Distant low-rise buildings sit behind the world landmark silhouettes.
   for (const [x, width, height] of [
     [-3.48, 0.38, 0.92], [-2.24, 0.30, 1.12], [-1.90, 0.30, 1.24],
     [-0.44, 0.32, 1.18], [0.34, 0.36, 0.96], [1.34, 0.32, 1.22],
     [2.22, 0.31, 1.12], [3.30, 0.36, 1.04],
   ]) tower(x, width, height, 0.18, { z: -0.36, background: true });
 
-  // New York: One World Trade Center, Empire State Building, Chrysler Building.
+  // Keep New York's iconic cluster on the unobscured right of the hero.
+  landmarkShiftX = 9.4;
   let top = tower(-3.30, 0.46, 2.74, 0.58, { windows: 0.55 });
   quad([-3.53, top, 0.19], [-3.07, top, 0.19], [-3.20, top + 0.34, 0.19], [-3.40, top + 0.34, 0.19], 0, 0.68);
   beam([-3.30, top + 0.34], [-3.30, top + 0.89], 0.020, 0.27, 6, 0.9);
@@ -272,6 +274,8 @@ export function createCityGeometry() {
     outline([[-2.34 - half, y], [-2.34, y + 0.12], [-2.34 + half, y]], 0.29, 6, 0.78, 0.016);
   }
   beam([-2.34, top + 0.44], [-2.34, top + 0.66], 0.018, 0.30, 6, 0.82);
+
+  landmarkShiftX = 0;
 
   // Dallas: a stepped downtown tower and Reunion Tower's lit observation ball.
   top = tower(-1.63, 0.55, 2.76, 0.48, { windows: 0.46 });
@@ -348,7 +352,8 @@ export function createCityGeometry() {
   top = tower(4.94, 0.14, 0.39, 0.72, { base: top, windows: 1 });
   beam([4.94, top], [4.94, top + 0.5], 0.018, 0.34, 6, 0.91);
 
-  // Kuala Lumpur: paired Petronas towers and their skybridge.
+  // The Petronas pair fills the former New York position on the left.
+  landmarkShiftX = -8.9;
   for (const x of [5.94, 6.56]) {
     top = tower(x, 0.35, 2.55, 0.59, { windows: 0.58 });
     top = tower(x, 0.23, 0.32, 0.67, { base: top, windows: 1 });
@@ -356,13 +361,81 @@ export function createCityGeometry() {
     beam([x, top + 0.24], [x, top + 0.54], 0.018, 0.36, 6, 0.91);
   }
   beam([6.09, BASE + 1.63], [6.41, BASE + 1.63], 0.065, 0.42, 5, 0.86);
+  landmarkShiftX = 0;
 
-  // Sydney: a low harbor profile with the Opera House's sail forms.
-  tower(7.31, 0.28, 0.43, 0.35, { windows: 0.85 });
-  for (const [x, width, height] of [[6.87, 0.42, 0.86], [7.28, 0.48, 1.18], [7.72, 0.45, 0.9]]) {
-    polygon([[x - width / 2, BASE + 0.41], [x - width * 0.2, BASE + height], [x + width / 2, BASE + 0.41]], 0.35, 5, 0.78);
-    outline([[x - width / 2, BASE + 0.41], [x - width * 0.2, BASE + height], [x + width / 2, BASE + 0.41]], 0.39, 6, 0.88, 0.018);
+  // Sydney Opera House: four layered, curved shell blades rather than triangles.
+  // The broad outer and shallow inner arcs leave negative space under each roof.
+  const operaX = 4.03;
+  rectangle(operaX - 0.79, BASE, operaX + 0.81, BASE + 0.17, 0.54, 2, 0.43);
+  beam([operaX - 0.83, BASE + 0.17], [operaX + 0.85, BASE + 0.17], 0.023, 0.62, 6, 0.65);
+  const operaCurve = (start, control, end, t) => {
+    const back = 1 - t;
+    return [back * back * start[0] + 2 * back * t * control[0] + t * t * end[0],
+      back * back * start[1] + 2 * back * t * control[1] + t * t * end[1]];
+  };
+  for (const [centerX, span, rise, z] of [
+    [operaX - 0.38, 0.63, 0.60, 0.56],
+    [operaX - 0.10, 0.85, 0.96, 0.59],
+    [operaX + 0.23, 0.91, 1.08, 0.62],
+    [operaX + 0.50, 0.64, 0.68, 0.66],
+  ]) {
+    const foot = BASE + 0.17;
+    const tip = [centerX - span * 0.42, foot + rise];
+    const base = [centerX + span * 0.52, foot];
+    const outerControl = [centerX + span * 0.35, foot + rise * 1.00];
+    const innerControl = [centerX + span * 0.11, foot + rise * 0.17];
+    const outer = [];
+    const inner = [];
+    for (let step = 0; step <= 12; step++) {
+      const t = step / 12;
+      outer.push(operaCurve(tip, outerControl, base, t));
+      inner.push(operaCurve(tip, innerControl, base, t));
+      if (step) {
+        const last = step - 1;
+        quad([outer[last][0], outer[last][1], z], [outer[step][0], outer[step][1], z],
+          [inner[step][0], inner[step][1], z], [inner[last][0], inner[last][1], z], 2, 0.63);
+      }
+    }
+    outline(outer, z + 0.024, 6, 0.83, 0.019);
+    outline(inner, z + 0.025, 8, 0.44, 0.009);
+    for (const t of [0.24, 0.48, 0.72]) {
+      const shellTop = operaCurve(tip, outerControl, base, t);
+      const shellBottom = operaCurve(tip, innerControl, base, t);
+      beam(shellTop, shellBottom, 0.008, z + 0.027, 8, 0.35);
+    }
   }
+
+
+  // Taipei 101: stacked setbacks and a fine spire.
+  let taipeiTop = tower(-5.27, 0.47, 1.23, 0.55, { windows: 0.58 });
+  for (let tier = 0; tier < 5; tier++) {
+    const halfWidth = 0.25 - tier * 0.024;
+    rectangle(-5.27 - halfWidth, taipeiTop, -5.27 + halfWidth, taipeiTop + 0.25,
+      0.31, 0, 0.55 + tier * 0.025);
+    beam([-5.27 - halfWidth - 0.02, taipeiTop + 0.23],
+      [-5.27 + halfWidth + 0.02, taipeiTop + 0.23], 0.018, 0.36, 6, 0.73);
+    taipeiTop += 0.25;
+  }
+  beam([-5.27, taipeiTop], [-5.27, taipeiTop + 0.40], 0.018, 0.37, 6, 0.84);
+
+  // Shanghai Tower: a tapering, gently twisting crown rather than a box.
+  const shanghaiX = -4.43;
+  const towerLevels = 13;
+  for (let level = 0; level < towerLevels; level++) {
+    const t0 = level / towerLevels;
+    const t1 = (level + 1) / towerLevels;
+    const y0 = BASE + t0 * 3.18;
+    const y1 = BASE + t1 * 3.18;
+    const w0 = 0.52 * (1 - 0.45 * t0);
+    const w1 = 0.52 * (1 - 0.45 * t1);
+    const drift0 = 0.10 * Math.sin(t0 * Math.PI * 1.2);
+    const drift1 = 0.10 * Math.sin(t1 * Math.PI * 1.2);
+    quad([shanghaiX + drift0 - w0 / 2, y0, -0.08], [shanghaiX + drift0 + w0 / 2, y0, -0.08],
+      [shanghaiX + drift1 + w1 / 2, y1, -0.08], [shanghaiX + drift1 - w1 / 2, y1, -0.08], 0, 0.42);
+    if (level % 2 === 0) beam([shanghaiX + drift0 - w0 / 2, y0],
+      [shanghaiX + drift0 + w0 / 2, y0], 0.014, -0.045, 8, 0.62);
+  }
+  beam([shanghaiX + 0.04, BASE + 3.18], [shanghaiX + 0.04, BASE + 3.43], 0.018, -0.03, 6, 0.72);
 
   // Shanghai: the Oriental Pearl Tower's stacked spheres and slender mast.
   beam([0.50, BASE], [0.50, 1.54], 0.045, 0.06, 2, 0.58);
@@ -381,15 +454,18 @@ export function createCityGeometry() {
     [-2.03, 0.37, 1.62, 0.74], [-1.27, 0.34, 1.87, 0.80],
     [-0.54, 0.33, 1.49, 0.71], [1.45, 0.35, 1.83, 0.76],
     [3.19, 0.30, 1.43, 0.82], [4.27, 0.34, 1.68, 0.78],
-    [5.50, 0.33, 1.62, 0.72], [7.95, 0.35, 1.56, 0.84],
+    [5.50, 0.33, 1.62, 0.72], [-3.65, 0.35, 1.56, 0.84],
   ]) constructionTower(x, width, height, progress, 0.44);
 
-  for (const [x, height, length, direction] of [
-    [-7.25, 2.48, 0.75, 1], [-4.14, 2.12, 0.78, -1],
-    [-1.77, 2.38, 0.80, 1], [0.98, 2.30, 0.69, -1],
-    [3.31, 2.34, 0.75, 1], [5.32, 2.24, 0.74, -1],
-    [7.67, 2.08, 0.65, -1],
-  ]) crane(x, height, length, direction);
+  for (const [x, height, length, direction, z, baseOffset] of [
+    [-7.25, 2.30, 0.70, 1, -0.18, 0.00],
+    [-4.55, 0.94, 0.66, -1, 0.53, 1.43],
+    [-1.77, 2.34, 0.76, 1, 0.50, 0.00],
+    [1.45, 0.90, 0.66, -1, 0.56, 1.39],
+    [3.31, 2.15, 0.72, 1, -0.18, 0.06],
+    [5.50, 0.96, 0.63, -1, 0.56, 1.17],
+    [7.82, 1.55, 0.60, -1, -0.24, 0.16],
+  ]) crane(x, height, length, direction, z, baseOffset);
 
   const triangleCount = faceIndex;
   // A modest reduction in moving faces keeps the original scatter physics.
