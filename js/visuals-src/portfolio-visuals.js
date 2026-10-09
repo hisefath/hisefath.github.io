@@ -13,13 +13,13 @@ if (stage) {
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
   let renderer;
   try {
-    renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
+    renderer = new THREE.WebGLRenderer({ antialias: false, alpha: true, powerPreference: 'low-power' });
   } catch {
     stage.classList.add('no-webgl');
   }
 
   if (renderer) {
-    renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 2));
+    renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 1.25));
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     stage.appendChild(renderer.domElement);
     const scene = new THREE.Scene();
@@ -76,11 +76,39 @@ if (stage) {
     let suppressHoverUntil = 0;
     let touchReleaseAt = 0;
     let visible = true;
+    let frame = 0;
+    let lastPaint = 0;
     let lastTime = performance.now();
     let nextAutoBurstAt = lastTime + 10000 + Math.random() * 90000;
     let hasMotion = true;
     let introStartedAt = 0;
     let lastIdleRender = 0;
+
+    function scatterForEntry() {
+      if (reducedMotion) return;
+      for (let i = 0; i < triangleCount; i++) {
+        if (!movable[i]) continue;
+        values[i] = 0.8 + ((i * 73) % 97) / 97 * 0.35;
+        velocities[i] = 0;
+        burstWeights[i] = 1;
+        for (let j = 0; j < 3; j++) {
+          influences[i * 3 + j] = values[i];
+          burstAttribute.array[i * 3 + j] = 1;
+        }
+      }
+      geometry.attributes.aInfluence.needsUpdate = true;
+      burstAttribute.needsUpdate = true;
+      hasMotion = true;
+      introStartedAt = 0;
+      pointerActive = false;
+      pointer.set(100, 100);
+      pointerTarget.set(100, 100);
+      ring.classList.remove('visible');
+    }
+
+    function schedule() {
+      if (visible && !document.hidden && !reducedMotion && !frame) frame = requestAnimationFrame(tick);
+    }
 
     function resize() {
       const width = stage.clientWidth;
@@ -152,16 +180,41 @@ if (stage) {
     stage.addEventListener('pointerup', release);
     stage.addEventListener('pointercancel', release);
     new IntersectionObserver(([entry]) => {
+      const wasVisible = visible;
       visible = entry.isIntersecting;
-      if (visible) nextAutoBurstAt = performance.now() + 10000 + Math.random() * 90000;
+      if (!visible) {
+        cancelAnimationFrame(frame);
+        frame = 0;
+        if (heldId !== null) heldId = null;
+        ring.classList.remove('visible');
+      } else if (!wasVisible) {
+        scatterForEntry();
+        lastTime = performance.now();
+        lastPaint = 0;
+        nextAutoBurstAt = lastTime + 10000 + Math.random() * 90000;
+        schedule();
+      }
     }, { threshold: .02 }).observe(stage);
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        cancelAnimationFrame(frame);
+        frame = 0;
+      } else {
+        lastTime = performance.now();
+        schedule();
+      }
+    });
 
     function tick(now) {
-      requestAnimationFrame(tick);
-      if (!introStartedAt) introStartedAt = now;
-      const dt = Math.min((now - lastTime) / 1000, 3);
+      frame = 0;
+      if (!visible || document.hidden) return;
+      schedule();
+      if (now - lastPaint < 33) return;
+      const dt = Math.min((now - lastTime) / 1000, 0.1);
       lastTime = now;
-      if (!visible || document.hidden || reducedMotion) return;
+      lastPaint = now;
+      if (!introStartedAt) introStartedAt = now;
+      if (reducedMotion) return;
       uniforms.uTime.value += dt;
       if (now >= nextAutoBurstAt && heldId === null) {
         const face = Math.floor(Math.random() * triangleCount);
@@ -230,6 +283,7 @@ if (stage) {
       streakField.update(uniforms.uTime.value);
       renderer.render(scene, camera);
     }
-    requestAnimationFrame(tick);
+    // Start immediately; the observer cancels frames as soon as the hero leaves view.
+    schedule();
   }
 }
