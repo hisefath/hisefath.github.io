@@ -13,7 +13,7 @@ if (stage) {
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
   let renderer;
   try {
-    renderer = new THREE.WebGLRenderer({ antialias: false, alpha: true, powerPreference: 'low-power' });
+    renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'low-power' });
   } catch {
     stage.classList.add('no-webgl');
   }
@@ -82,7 +82,6 @@ if (stage) {
     let nextAutoBurstAt = lastTime + 10000 + Math.random() * 90000;
     let hasMotion = true;
     let introStartedAt = 0;
-    let lastIdleRender = 0;
 
     function scatterForEntry() {
       if (reducedMotion) return;
@@ -240,8 +239,7 @@ if (stage) {
         if (holdActive) uniforms.uBurstCenter.value.copy(holdCenter);
       } else ring.classList.remove('visible');
       if (!hoverActive && !burstActive && !holdActive && !hasMotion) {
-        if (now - lastIdleRender < 80) return;
-        lastIdleRender = now;
+        // Keep the crane sweep fluid while skipping all CPU shard updates.
         renderer.render(scene, camera);
         return;
       }

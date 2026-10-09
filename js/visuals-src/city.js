@@ -136,51 +136,38 @@ export function createCityGeometry() {
     return top;
   }
 
-  function constructionTower(x, width, height, progress = 0.62, tone = 0.48, background = false) {
+  function constructionTower(x, width, height, progress = 0.76, tone = 0.48, background = false) {
     const z = background ? -0.29 : 0.44;
     const builtHeight = height * progress;
     tower(x, width, builtHeight, tone, { z, windows: 0.72, background });
     const left = x - width / 2;
     const right = x + width / 2;
+    const frameBase = BASE + builtHeight;
     const top = BASE + height;
-    const depth = width * 0.23;
-    const levels = Math.max(5, Math.ceil(height / 0.27));
-    const bays = width > 0.38 ? 3 : 2;
     const frameKind = background ? 7 : 5;
+    const levels = Math.max(2, Math.round((height - builtHeight) / 0.17));
 
-    // Offset rear columns, floor slabs, and connected front bays give the
-    // incomplete tower a readable three-dimensional structural skeleton.
-    for (let bay = 0; bay <= bays; bay++) {
-      const columnX = left + width * bay / bays;
-      beam([columnX, BASE], [columnX, top], bay === 0 || bay === bays ? 0.026 : 0.018, z + 0.12, frameKind, 0.53);
-      beam([columnX + depth, BASE + depth * 0.45], [columnX + depth, top + depth * 0.45], 0.014, z - 0.13, frameKind, 0.30);
+    // A mostly finished facade supports only a few exposed upper floors.
+    // Open columns and slabs read as active construction without an exterior
+    // scaffold wrapping the full height of the building.
+    for (const fraction of [0, 0.5, 1]) {
+      const columnX = left + width * fraction;
+      beam([columnX, frameBase], [columnX, top], fraction === 0.5 ? 0.013 : 0.019, z + 0.11, frameKind, 0.48);
     }
     for (let level = 0; level <= levels; level++) {
-      const y = BASE + height * level / levels;
-      const slabWidth = level <= Math.floor(levels * progress) ? 0.036 : 0.022;
-      beam([left - 0.055, y], [right + 0.065, y], slabWidth, z + 0.14, frameKind, 0.59);
-      beam([left + depth, y + depth * 0.45], [right + depth, y + depth * 0.45], 0.015, z - 0.12, frameKind, 0.31);
-      if (level % 2 === 0) {
-        beam([left, y], [left + depth, y + depth * 0.45], 0.012, z + 0.13, frameKind, 0.49);
-        beam([right, y], [right + depth, y + depth * 0.45], 0.012, z + 0.13, frameKind, 0.49);
-      }
-      if (level < levels) {
-        const nextY = BASE + height * (level + 1) / levels;
-        for (let bay = 0; bay < bays; bay++) {
-          if ((level + bay) % 2 === 0) {
-            const bayLeft = left + width * bay / bays;
-            const bayRight = left + width * (bay + 1) / bays;
-            beam([bayLeft, y], [bayRight, nextY], 0.011, z + 0.15, frameKind, 0.47);
-            beam([bayRight, y], [bayLeft, nextY], 0.011, z + 0.15, frameKind, 0.47);
-          }
-        }
+      const y = frameBase + (top - frameBase) * level / levels;
+      beam([left - 0.025, y], [right + 0.025, y], 0.023, z + 0.13, frameKind, 0.56);
+      if (level > 0 && level < levels && level % 2 === 1 && !background) {
+        // Tiny, muted work lights mark a handful of occupied floors.
+        const lightX = left + width * (0.23 + 0.50 * hash(x * 29 + level));
+        rectangle(lightX, y + 0.018, lightX + 0.018, y + 0.039,
+          z + 0.16, 4, hash(x * 47 + level * 13));
       }
     }
-    // Unfinished roof deck, rebar, and a short temporary edge guardrail.
-    beam([left - 0.085, top], [right + 0.09, top], 0.047, z + 0.16, frameKind, 0.6);
-    for (const fraction of [0.18, 0.5, 0.82]) {
+    // Two short rebar tips keep the roof visibly unfinished.
+    for (const fraction of [0.2, 0.8]) {
       const barX = left + width * fraction;
-      beam([barX, top], [barX, top + 0.11 + hash(x * 13 + fraction) * 0.1], 0.009, z + 0.17, 6, 0.55);
+      beam([barX, top], [barX, top + 0.07], 0.012, z + 0.14, frameKind, 0.48);
     }
     return top;
   }
@@ -191,6 +178,7 @@ export function createCityGeometry() {
     const tail = x - jibLength * direction * 0.38;
     const mastLeft = x - 0.055;
     const mastRight = x + 0.055;
+    craneRole = 3; // Static mast, with the same color as the moving jib.
     beam([mastLeft, BASE], [mastLeft, mastTop], 0.019, z, 5, 0.52);
     beam([mastRight, BASE], [mastRight, mastTop], 0.019, z, 5, 0.52);
     const mastLevels = Math.max(5, Math.ceil(mastHeight / 0.23));
@@ -385,15 +373,15 @@ export function createCityGeometry() {
   // An independent domed masjid anchors the foreground among the towers.
   masjid(2.20);
 
-  // Open floors and exposed bracing keep roughly half the added building forms
-  // visibly under construction, with progress staggered across the skyline.
+  // Roughly half the building forms have a few open floors above finished
+  // lower facades, with construction progress staggered across the skyline.
   for (const [x, width, height, progress] of [
-    [-7.67, 0.37, 1.8, 0.54], [-5.86, 0.41, 1.95, 0.65],
-    [-4.55, 0.42, 2.07, 0.48], [-3.91, 0.34, 1.45, 0.72],
-    [-2.03, 0.37, 1.62, 0.59], [-1.27, 0.34, 1.87, 0.67],
-    [-0.54, 0.33, 1.49, 0.55], [1.45, 0.35, 1.83, 0.62],
-    [3.19, 0.30, 1.43, 0.53], [4.27, 0.34, 1.68, 0.69],
-    [5.50, 0.33, 1.62, 0.58], [7.95, 0.35, 1.56, 0.51],
+    [-7.67, 0.37, 1.8, 0.72], [-5.86, 0.41, 1.95, 0.79],
+    [-4.55, 0.42, 2.07, 0.69], [-3.91, 0.34, 1.45, 0.83],
+    [-2.03, 0.37, 1.62, 0.74], [-1.27, 0.34, 1.87, 0.80],
+    [-0.54, 0.33, 1.49, 0.71], [1.45, 0.35, 1.83, 0.76],
+    [3.19, 0.30, 1.43, 0.82], [4.27, 0.34, 1.68, 0.78],
+    [5.50, 0.33, 1.62, 0.72], [7.95, 0.35, 1.56, 0.84],
   ]) constructionTower(x, width, height, progress, 0.44);
 
   for (const [x, height, length, direction] of [
