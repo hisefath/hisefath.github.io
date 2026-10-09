@@ -1,0 +1,13 @@
+{
+  "name": "hisefath-portfolio-visuals",
+  "private": true,
+  "scripts": {
+    "build:visuals": "esbuild js/visuals-src/portfolio-visuals.js --bundle --format=iife --platform=browser --target=es2020 --outfile=js/portfolio-visuals.js --minify"
+  },
+  "dependencies": {
+    "three": "0.180.0"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2"
+  }
+}
