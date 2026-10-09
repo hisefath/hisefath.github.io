@@ -19,7 +19,7 @@ export function createCityGeometry() {
   const craneRoles = [];
   const cranePivots = [];
   let craneRole = 0;
-  let cranePivot = [0, 0, 0];
+  let cranePivot = [0, 0];
   let faceIndex = 0;
 
   function triangle(a, b, c, kind, tone = 0.5) {
@@ -200,30 +200,30 @@ export function createCityGeometry() {
       beam([mastLeft, y0], [mastRight, y0], 0.011, z + 0.02, 6, 0.45);
       beam(level % 2 ? [mastRight, y0] : [mastLeft, y0], level % 2 ? [mastLeft, y1] : [mastRight, y1], 0.009, z + 0.025, 6, 0.49);
     }
-    cranePivot = [x, mastTop, z];
+    cranePivot = [x, mastTop];
     craneRole = 1;
     // Slewing platform, operator cab, counterweight, and triangular jib truss.
     beam([x - 0.16, mastTop], [x + 0.16, mastTop], 0.043, z + 0.04, 5, 0.64);
     rectangle(x + direction * 0.06 - 0.055, mastTop - 0.14, x + direction * 0.06 + 0.055, mastTop - 0.02, z + 0.055, 2, 0.57);
     beam([x, mastTop], [x, mastTop + 0.27], 0.019, z + 0.06, 5, 0.68);
     beam([tail, mastTop], [jibEnd, mastTop], 0.023, z + 0.06, 5, 0.60);
-    beam([x, mastTop + 0.27], [jibEnd, mastTop], 0.012, z + 0.065, 6, 0.62);
-    beam([tail, mastTop], [x, mastTop + 0.27], 0.012, z + 0.065, 6, 0.55);
+    beam([x, mastTop + 0.27], [jibEnd, mastTop], 0.020, z + 0.065, 6, 0.62);
+    beam([tail, mastTop], [x, mastTop + 0.27], 0.020, z + 0.065, 6, 0.55);
     const segments = Math.max(4, Math.ceil(jibLength / 0.16));
     for (let segment = 0; segment < segments; segment++) {
       const a = x + direction * jibLength * segment / segments;
       const b = x + direction * jibLength * (segment + 1) / segments;
       const underY = mastTop - 0.11;
-      beam([a, underY], [b, underY], 0.009, z + 0.065, 6, 0.44);
-      beam([a, underY], [b, mastTop], 0.009, z + 0.068, 6, 0.5);
-      beam([b, underY], [b, mastTop], 0.009, z + 0.068, 6, 0.48);
+      beam([a, underY], [b, underY], 0.020, z + 0.065, 6, 0.44);
+      beam([a, underY], [b, mastTop], 0.020, z + 0.068, 6, 0.5);
+      beam([b, underY], [b, mastTop], 0.020, z + 0.068, 6, 0.48);
     }
     rectangle(tail - 0.07, mastTop - 0.08, tail + 0.07, mastTop + 0.01, z + 0.07, 2, 0.49);
     const hookX = x + jibLength * direction * 0.72;
     rectangle(hookX - 0.035, mastTop - 0.035, hookX + 0.035, mastTop + 0.04, z + 0.09, 5, 0.68);
     craneRole = 2;
-    beam([hookX, mastTop - 0.03], [hookX, mastTop - 0.49], 0.008, z + 0.09, 6, 0.52);
-    outline([[hookX - 0.045, mastTop - 0.49], [hookX + 0.03, mastTop - 0.49], [hookX + 0.03, mastTop - 0.55]], z + 0.1, 6, 0.66, 0.011);
+    beam([hookX, mastTop - 0.03], [hookX, mastTop - 0.49], 0.020, z + 0.09, 6, 0.52);
+    outline([[hookX - 0.045, mastTop - 0.49], [hookX + 0.03, mastTop - 0.49], [hookX + 0.03, mastTop - 0.55]], z + 0.1, 6, 0.66, 0.020);
     craneRole = 0;
   }
 
@@ -422,7 +422,7 @@ export function createCityGeometry() {
   geometry.setAttribute('aBurstWeight', new THREE.BufferAttribute(new Float32Array(burstWeights), 1).setUsage(THREE.DynamicDrawUsage));
   geometry.setAttribute('aInfluence', new THREE.BufferAttribute(influences, 1).setUsage(THREE.DynamicDrawUsage));
   geometry.setAttribute('aCraneRole', new THREE.Float32BufferAttribute(craneRoles, 1));
-  geometry.setAttribute('aCranePivot', new THREE.Float32BufferAttribute(cranePivots, 3));
+  geometry.setAttribute('aCranePivot', new THREE.Float32BufferAttribute(cranePivots, 2));
   geometry.computeVertexNormals();
   return { geometry, faceCenters: new Float32Array(faceCenters), influences, movable, triangleCount };
 }

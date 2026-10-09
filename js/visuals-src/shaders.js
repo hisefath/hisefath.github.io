@@ -7,7 +7,7 @@ export const vertexShader = /* glsl */ `
   attribute float aKind;
   attribute float aTone;
   attribute float aCraneRole;
-  attribute vec3 aCranePivot;
+  attribute vec2 aCranePivot;
 
   uniform float uTime;
   uniform float uForce;
@@ -54,20 +54,22 @@ export const vertexShader = /* glsl */ `
     );
     offset.xy += scatter * 0.085 * vec2(sin(uTime * 2.3 + aSeed.x * 19.0), cos(uTime * 2.0 + aSeed.y * 17.0));
 
-    vec3 transformed = aCenter + local + offset;
+    vec3 transformed = aCenter + local;
     if (aCraneRole > 0.5) {
-      // Slow mast-centered slewing; each crane gets a different phase.
       float phase = aCranePivot.x * 2.37;
-      float slew = 0.24 * sin(uTime * (0.10 + 0.015 * sin(phase)) + phase);
-      vec3 arm = transformed - aCranePivot;
-      transformed.x = aCranePivot.x + arm.x * cos(slew) + arm.z * sin(slew);
-      transformed.z = aCranePivot.z - arm.x * sin(slew) + arm.z * cos(slew);
+      // Project a slow mast-centered sweep onto the skyline plane. Keeping
+      // every vertex at its original depth prevents thin trusses from crossing
+      // and flickering as the jib swings left and right.
+      float sweep = 0.70 + 0.23 * sin(uTime * (0.22 + 0.035 * sin(phase)) + phase);
+      transformed.x = aCranePivot.x + (transformed.x - aCranePivot.x) * sweep;
       if (aCraneRole > 1.5) {
-        // Keep the cable top fixed while the hook slowly rises and falls.
+        // The cable top stays attached to the jib while its hook is lowered.
         float lower = smoothstep(0.02, 0.52, aCranePivot.y - 0.03 - position.y);
-        transformed.y -= lower * (0.15 + 0.13 * sin(uTime * 0.18 + phase * 1.7));
+        float lift = 0.14 + 0.14 * sin(uTime * (0.20 + 0.04 * cos(phase)) + phase * 1.7);
+        transformed.y -= lower * lift;
       }
     }
+    transformed += offset;
     vBarycentric = aBarycentric;
     vNormal = normalize(rotateAxis(normal, axis, angle));
     vInfluence = influence;
