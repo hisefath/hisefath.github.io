@@ -11,7 +11,7 @@
   function pulse() {
     clearGlow();
     if (!document.hidden && !reducedMotion.matches) {
-      const candidates = [...document.querySelectorAll('.hero-system, .decision-card, .ownership-grid article, .layer-list details[open]')]
+      const candidates = [...document.querySelectorAll('.hero-system, .decision-card, .ownership-grid article, .layer-list details[open], .ai-board, .project-archive-cta, .projects .project-card, .gallery-card')]
         .filter((element) => {
           const box = element.getBoundingClientRect();
           return box.bottom > 80 && box.top < window.innerHeight - 80;

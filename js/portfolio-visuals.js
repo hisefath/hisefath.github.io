@@ -3937,10 +3937,10 @@ void main() {
   varying vec3 vWorldPosition;
 
   void main() {
-    // Burnt umber through amber, sampled around Daybreak's #804916 horizon.
-    vec3 midnight = vec3(0.009, 0.007, 0.005);
-    vec3 steel = vec3(0.055, 0.036, 0.020);
-    vec3 glass = vec3(0.12, 0.072, 0.029);
+    // Charcoal structures sit against the amber Daybreak horizon.
+    vec3 midnight = vec3(0.006, 0.009, 0.014);
+    vec3 steel = vec3(0.035, 0.048, 0.058);
+    vec3 glass = vec3(0.077, 0.098, 0.112);
     vec3 goldLight = vec3(0.89, 0.51, 0.13);
     vec3 amber = vec3(0.70, 0.32, 0.045);
     vec3 pearl = vec3(1.0, 0.76, 0.29);
@@ -3952,19 +3952,19 @@ void main() {
     if (vKind > 8.5) {
       color = mix(vec3(0.53, 0.26, 0.06), vec3(1.0, 0.64, 0.18), 0.28 + vTone * 0.42);
     } else if (vKind > 7.5) {
-      color = mix(vec3(0.20, 0.16, 0.11), vec3(0.29, 0.22, 0.13), vTone * 0.65);
+      color = mix(vec3(0.10, 0.13, 0.15), vec3(0.17, 0.20, 0.22), vTone * 0.65);
     } else if (vKind > 6.5) {
       color = mix(midnight, steel, 0.18 + vTone * 0.19);
     } else if (vKind > 5.5) {
       color = mix(glass, goldLight, 0.48 + vTone * 0.30);
     } else if (vKind > 4.5) {
-      color = mix(vec3(0.12, 0.09, 0.055), vec3(0.25, 0.16, 0.075), 0.32 + vTone * 0.26);
+      color = mix(vec3(0.08, 0.11, 0.13), vec3(0.17, 0.20, 0.22), 0.32 + vTone * 0.26);
     } else if (vKind > 3.5) {
       // Each window has a stable random phase and a very slow, soft light cycle.
       float windowCycle = sin(uTime * (0.17 + vTone * 0.13) + vTone * 37.7);
       float lit = smoothstep(0.35, 0.86, windowCycle);
       float restingGlow = 0.18 + smoothstep(0.78, 0.98, vTone) * 0.22;
-      color = mix(vec3(0.08, 0.035, 0.008), vec3(0.78, 0.42, 0.105), restingGlow + lit * 0.48);
+      color = mix(vec3(0.022, 0.028, 0.034), vec3(0.88, 0.53, 0.13), restingGlow + lit * 0.48);
     } else if (vKind > 2.5) {
       color = mix(midnight, glass, 0.24 + vTone * 0.14);
     } else if (vKind > 1.5) {

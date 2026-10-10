@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 620" role="img" aria-label="Equinox trading simulation preview">
-  <defs><radialGradient id="g"><stop stop-color="#40210c"/><stop offset="1" stop-color="#090604"/></radialGradient><linearGradient id="line" x1="0" x2="1"><stop stop-color="#884714"/><stop offset=".6" stop-color="#e3a34d"/><stop offset="1" stop-color="#874717"/></linearGradient></defs>
-  <rect width="1000" height="620" fill="url(#g)"/><g stroke="#76502b" opacity=".28"><path d="M0 126h1000M0 214h1000M0 302h1000M0 390h1000M0 478h1000"/><path d="M138 0v620M318 0v620M498 0v620M678 0v620M858 0v620"/></g>
+  <defs><radialGradient id="g"><stop stop-color="#19232c"/><stop offset="1" stop-color="#07090d"/></radialGradient><linearGradient id="line" x1="0" x2="1"><stop stop-color="#a7621e"/><stop offset=".6" stop-color="#f4bd57"/><stop offset="1" stop-color="#a7621e"/></linearGradient></defs>
+  <rect width="1000" height="620" fill="url(#g)"/><g stroke="#78828b" opacity=".18"><path d="M0 126h1000M0 214h1000M0 302h1000M0 390h1000M0 478h1000"/><path d="M138 0v620M318 0v620M498 0v620M678 0v620M858 0v620"/></g>
   <g fill="none" stroke="url(#line)" stroke-width="3"><path d="M55 433h173l74-123h156l79 123h174l68-206h163"/><path d="M55 464h173l74-123h156l79 123h174l68-206h163" opacity=".2"/></g>
   <g fill="#d69342" font-family="monospace" letter-spacing="5"><text x="55" y="92" font-size="25">EQUINOX / SIMULATION</text><text x="55" y="563" font-size="17">KALSHI  ↔  POLYMARKET  /  ORDER FLOW</text></g><circle cx="779" cy="227" r="9" fill="#ffd176"/>
 </svg>
