@@ -147,10 +147,104 @@ body[data-theme="dark"] .projects .task-board > div, body[data-theme="dark"] .pr
 .orbit-core { background: radial-gradient(circle at 35% 25%, rgba(244, 180, 68, .16), rgba(16, 22, 29, .96) 65%); }
 .questions-section { background: radial-gradient(ellipse at 50% 105%, rgba(222, 111, 18, .075), transparent 58%), rgba(8, 12, 18, .8); }
 .decision-card > div, .decision-card > span { border-color: rgba(244, 189, 87, .2); }
+
+/* Clear, dark glass throughout the site; amber stays in the rim and reflected light. */
+.ai-board, .project-card, .projects .project-card, .project-archive-cta,
+.gallery-card, .factory-note, .decision-card, .hero-system, .ownership-grid article {
+  background: linear-gradient(145deg, rgba(255, 255, 255, .045), rgba(12, 18, 25, .20) 38%, rgba(7, 12, 18, .33));
+  border-color: rgba(244, 189, 87, .24);
+  box-shadow: inset 0 1px rgba(255, 255, 255, .13), inset 1px 0 rgba(255, 255, 255, .035), 0 20px 55px rgba(0, 0, 0, .20);
+  -webkit-backdrop-filter: blur(18px) saturate(125%);
+  backdrop-filter: blur(18px) saturate(125%);
+}
+.button-quiet, .tag-list span, .skill-icon, .social-icon,
+.gallery-filter, .gallery-search, .gallery-empty button,
+.project-preview-label, .home-preview-control, .media-label, .preview-control {
+  background: linear-gradient(145deg, rgba(255, 255, 255, .075), rgba(10, 17, 24, .28) 48%, rgba(7, 12, 18, .38));
+  border-color: rgba(255, 223, 158, .28);
+  -webkit-backdrop-filter: blur(14px) saturate(135%);
+  backdrop-filter: blur(14px) saturate(135%);
+}
+.layers-section, .boundaries-section, .questions-section, .about {
+  background: linear-gradient(155deg, rgba(255, 255, 255, .025), rgba(7, 12, 18, .25) 58%, rgba(7, 12, 18, .36));
+}
+body[data-theme="dark"] .projects .street-line, body[data-theme="dark"] .projects .street-block,
+.assistant-question, .market-columns div:last-child i, .ledger-step i {
+  background: rgba(255, 241, 209, .075);
+  border-color: rgba(255, 205, 111, .36);
+  -webkit-backdrop-filter: blur(12px) saturate(130%);
+  backdrop-filter: blur(12px) saturate(130%);
+}
+.map-preview {
+  background-image: linear-gradient(22deg, transparent 47%, rgba(255, 205, 111, .24) 48%, rgba(255, 205, 111, .24) 50%, transparent 51%), linear-gradient(105deg, transparent 47%, rgba(255, 205, 111, .18) 48%, rgba(255, 205, 111, .18) 50%, transparent 51%);
+}
+.home-preview-control:hover { background: rgba(255, 222, 163, .13); }
+.ridge-back { stroke: rgba(234, 177, 90, .42); }
+.mountain-contour { stroke: rgba(250, 187, 91, .56); }
+
+/* The contact action behaves like a small curved glass lens. */
+.hero-actions .button-quiet {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border-radius: 17px;
+  border: 1px solid rgba(255, 225, 165, .37);
+  background: linear-gradient(160deg, rgba(255, 255, 255, .15), rgba(255, 255, 255, .035) 33%, rgba(16, 23, 31, .19) 68%, rgba(255, 190, 87, .065));
+  color: #fff8ec;
+  -webkit-backdrop-filter: blur(24px) saturate(165%);
+  backdrop-filter: blur(24px) saturate(165%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .42), inset 1px 0 0 rgba(255, 255, 255, .1), inset 0 -1px 0 rgba(255, 188, 92, .16), 0 10px 28px rgba(0, 0, 0, .16);
+  transition: transform .25s ease, border-color .3s ease, box-shadow .3s ease, background .3s ease;
+}
+.hero-actions .button-quiet::before {
+  content: "";
+  position: absolute;
+  inset: 1px 1px 52%;
+  z-index: -1;
+  border-radius: 15px 15px 50% 50%;
+  background: linear-gradient(180deg, rgba(255, 255, 255, .13), transparent);
+  pointer-events: none;
+}
+.hero-actions .button-quiet:hover, .hero-actions .button-quiet:focus-visible {
+  transform: translateY(-3px);
+  border-color: rgba(255, 211, 128, .9);
+  background: linear-gradient(160deg, rgba(255, 239, 205, .23), rgba(255, 255, 255, .07) 34%, rgba(18, 24, 29, .18) 68%, rgba(255, 178, 62, .12));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .68), inset 0 -1px 0 rgba(255, 197, 104, .34), 0 0 0 1px rgba(255, 193, 88, .13), 0 0 19px rgba(255, 172, 52, .32), 0 0 44px rgba(241, 143, 31, .19), 0 12px 30px rgba(0, 0, 0, .24);
+}
+.hero-actions .button-quiet:focus-visible { outline: 2px solid #ffd27b; outline-offset: 4px; }
+
+/* Give each Software Factory Kit phase a visible, restrained hover response. */
+.ai-board .board-row {
+  position: relative;
+  background: transparent;
+  transition: background .3s ease, box-shadow .3s ease, padding-left .3s ease;
+}
+.ai-board .board-row::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 2px;
+  background: linear-gradient(transparent, #ffc46a, transparent);
+  opacity: 0;
+  box-shadow: 0 0 18px rgba(255, 177, 64, .7);
+  transition: opacity .3s ease;
+}
+.ai-board .board-row:hover {
+  padding-left: 34px;
+  background: linear-gradient(90deg, rgba(255, 199, 99, .075), rgba(255, 255, 255, .04) 36%, transparent 83%);
+  box-shadow: inset 0 1px rgba(255, 220, 164, .1), inset 0 -1px rgba(255, 220, 164, .08);
+}
+.ai-board .board-row:hover::before { opacity: 1; }
+.ai-board .board-row strong, .ai-board .board-step { transition: color .3s ease, text-shadow .3s ease; }
+.ai-board .board-row:hover strong { color: #fff9ec; text-shadow: 0 0 20px rgba(255, 188, 91, .28); }
+.ai-board .board-row:hover .board-step { color: #ffd27b; text-shadow: 0 0 14px rgba(255, 188, 91, .55); }
+.ai-board:hover { border-color: rgba(255, 205, 111, .48); box-shadow: inset 0 1px rgba(255, 255, 255, .16), 0 0 30px rgba(236, 149, 34, .1), 0 20px 55px rgba(0, 0, 0, .24); }
 @media (max-width: 800px) {
   .hero-art::before { background: linear-gradient(180deg, rgba(7, 9, 13, .97), rgba(7, 9, 13, .8) 28%, rgba(7, 9, 13, .25) 63%, rgba(7, 9, 13, .4)); }
   .hero-copy .hero-lede { text-shadow: 0 1px 12px #07090d, 0 0 24px #07090d; }
 }
 @media (prefers-reduced-motion: reduce) {
   .ai-board, .project-archive-cta, .projects .project-card, .gallery-card { transition: none; }
+  .hero-actions .button-quiet, .ai-board .board-row, .ai-board .board-row::before,
+  .ai-board .board-row strong, .ai-board .board-step { transition: none; }
 }

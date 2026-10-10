@@ -221,12 +221,13 @@ export function createCityGeometry() {
     const z = 0.58;
     rectangle(x - 0.54, BASE, x + 0.54, BASE + 0.71, z, 0, 0.64);
     rectangle(x - 0.63, BASE + 0.68, x + 0.63, BASE + 0.76, z + 0.02, 5, 0.65);
-    polygon([[x - 0.39, BASE + 0.76], [x - 0.33, BASE + 1.03], [x - 0.18, BASE + 1.28],
-      [x, BASE + 1.38], [x + 0.18, BASE + 1.28], [x + 0.33, BASE + 1.03],
-      [x + 0.39, BASE + 0.76]], z + 0.04, 5, 0.75);
+    // Leave the dome open so the atmosphere shows through its glass-like frame.
     outline([[x - 0.39, BASE + 0.76], [x - 0.33, BASE + 1.03], [x - 0.18, BASE + 1.28],
       [x, BASE + 1.38], [x + 0.18, BASE + 1.28], [x + 0.33, BASE + 1.03],
       [x + 0.39, BASE + 0.76]], z + 0.07, 6, 0.75, 0.014);
+    for (const offset of [-0.19, 0, 0.19]) {
+      beam([x + offset * 1.65, BASE + 0.78], [x + offset, BASE + 1.28 - Math.abs(offset) * 0.48], 0.008, z + 0.06, 8, 0.35);
+    }
     for (const side of [-1, 1]) {
       const minaretX = x + side * 0.57;
       rectangle(minaretX - 0.07, BASE, minaretX + 0.07, BASE + 1.45, z + 0.05, 0, 0.65);
