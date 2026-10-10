@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090604">
+  <meta name="description" content="Explore Sefath Chowdhury's software projects, from infrastructure and AI systems to web applications and hardware experiments.">
+  <title>Projects — Sefath Chowdhury</title>
+  <link rel="icon" href="assets/mark.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/portfolio.css">
+  <link rel="stylesheet" href="css/project-gallery.css">
+  <script src="js/project-gallery.js" defer></script>
+</head>
+<body data-theme="dark" data-view="city">
+  <div class="site-atmosphere" aria-hidden="true"></div>
+  <a class="skip-link" href="#main">Skip to projects</a>
+  <header class="site-header"><nav class="nav-shell" aria-label="Main navigation">
+    <a class="brand" href="index.html#top" aria-label="Sefath Chowdhury, back to home"><img src="assets/mark.svg" width="30" height="30" alt=""><span>Sefath<span class="brand-period">.</span></span></a>
+    <div class="nav-links"><a href="index.html#work">Work</a><a href="projects.html" aria-current="page">Projects</a><a href="index.html#skills">Skills</a><a href="index.html#about">About</a><a href="index.html#contact">Contact</a></div>
+  </nav></header>
+  <main id="main">
+    <section class="gallery-hero section-wrap" aria-labelledby="gallery-title">
+      <p class="section-kicker">PROJECT ARCHIVE <span>004 / DEEPER DIVE</span></p>
+      <div class="gallery-hero-grid"><div><h1 id="gallery-title">Built, tested, <em>explored.</em></h1><p class="gallery-lede">A closer look at the products, systems, and experiments behind my work. Browse by kind, watch a real walkthrough where available, and open the source.</p></div><div class="gallery-index" aria-hidden="true"><span>01 — 13</span><span>SELECTED PROJECTS</span><span>↘</span></div></div>
+    </section>
+    <section class="gallery-section section-wrap" aria-label="Browse projects">
+      <div class="gallery-toolbar"><div class="gallery-filters" role="group" aria-label="Filter projects">
+        <button type="button" class="gallery-filter is-active" data-filter="all" aria-pressed="true">All</button>
+        <button type="button" class="gallery-filter" data-filter="systems" aria-pressed="false">Systems</button>
+        <button type="button" class="gallery-filter" data-filter="product" aria-pressed="false">Products</button>
+        <button type="button" class="gallery-filter" data-filter="ai" aria-pressed="false">AI</button>
+        <button type="button" class="gallery-filter" data-filter="community" aria-pressed="false">Community</button>
+        <button type="button" class="gallery-filter" data-filter="hardware" aria-pressed="false">Hardware</button>
+      </div><label class="gallery-search"><span class="visually-hidden">Search projects</span><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.6"/><path d="m16 16 5 5"/></svg><input id="project-search" type="search" placeholder="Search projects" autocomplete="off"></label></div>
+      <p class="gallery-count" id="gallery-count" role="status" aria-live="polite">Showing 13 projects</p>
+      <div class="gallery-grid" id="gallery-grid">
+        <article class="gallery-card gallery-card--featured gallery-card--factory" data-categories="ai systems" data-search="software factory kit ai native workflow skills human approval gates automated quality verification orchestration">
+          <div class="gallery-media gallery-media--factory"><div class="factory-preview" aria-hidden="true"><span>SOFTWARE FACTORY / OPERATING MODEL</span><div><b>Intent</b><i>→</i><b>Design</b><i>→</i><b>Build</b><i>→</i><b>Verify</b></div><small>HUMAN DECISIONS · AUTOMATED CHECKS · LEARNING LOOP</small></div><span class="media-label">WORKFLOW ILLUSTRATION</span></div>
+          <div class="gallery-card-body"><span class="card-meta">FEATURED / AI ENGINEERING</span><h2>Software Factory Kit</h2><p>My open-source operating model for AI-native delivery: phase-specific skills, human decision gates, automated quality checks, and a feedback loop for failures.</p><div class="gallery-tags"><span>Agent workflows</span><span>SDLC</span><span>Verification</span></div><div class="gallery-links"><a href="#factory">How the workflow works ↓</a><a href="https://github.com/hisefath/software-factory-kit" target="_blank" rel="noopener noreferrer">Explore source ↗</a></div></div>
+        </article>
+        <article class="gallery-card gallery-card--featured" data-categories="systems" data-search="equinox prediction markets smart order routing go systems trading">
+          <div class="gallery-media gallery-media--video"><video class="project-video" muted loop playsinline preload="none" poster="assets/demos/equinox-poster.svg" aria-label="Equinox terminal demo walkthrough"><source data-src="assets/demos/equinox-demo.mp4" type="video/mp4"></video><span class="media-label">REAL PROJECT WALKTHROUGH</span><button type="button" class="preview-control" aria-label="Play Equinox demo">Play preview ▶</button></div>
+          <div class="gallery-card-body"><span class="card-meta">01 / SYSTEMS · VIDEO DEMO</span><h2>Equinox</h2><p>A cross-venue prediction-market matching and order-routing simulation. Built in Go for a PEAK6 Labs partner project.</p><div class="gallery-tags"><span>Go</span><span>Market structure</span><span>Simulation</span></div><div class="gallery-links"><a href="https://github.com/hisefath/equinox" target="_blank" rel="noopener noreferrer">Explore source ↗</a></div></div>
+        </article>
+        <article class="gallery-card gallery-card--featured" data-categories="product systems" data-search="cerbo supplement store laravel checkout ledger provider healthcare live demo">
+          <div class="gallery-media gallery-media--ledger"><div class="ledger-preview" aria-hidden="true"><div class="ledger-step"><span>01 / PROVIDER</span><strong>Build order</strong><i></i><i></i></div><span class="ledger-arrow">→</span><div class="ledger-step"><span>02 / PATIENT</span><strong>Checkout</strong><b>$63.99</b></div><span class="ledger-arrow">→</span><div class="ledger-step"><span>03 / PLATFORM</span><strong>Audit ledger</strong><i></i><i></i></div></div><span class="media-label">FLOW ILLUSTRATION · LIVE APP AVAILABLE</span></div>
+          <div class="gallery-card-body"><span class="card-meta">02 / PRODUCT · LIVE DEMO</span><h2>Cerbo Supplement Store</h2><p>An in-EHR store slice where provider orders, patient payments, fees, and payouts reconcile in an auditable ledger.</p><div class="gallery-tags"><span>Laravel</span><span>Payments</span><span>Healthcare</span></div><div class="gallery-links"><a href="https://supplement-store-slice.up.railway.app/" target="_blank" rel="noopener noreferrer">Try live demo ↗</a><a href="https://github.com/hisefath/cerbo-supplement-store" target="_blank" rel="noopener noreferrer">Source ↗</a></div></div>
+        </article>
+        <article class="gallery-card" data-categories="systems" data-search="meridian solana markets order book pyth anchor nextjs systems">
+          <div class="gallery-media gallery-media--market"><div class="market-preview" aria-hidden="true"><span>MERIDIAN / ORDER BOOK</span><div class="market-columns"><div><i style="--bar:80%"></i><i style="--bar:53%"></i><i style="--bar:68%"></i><i style="--bar:42%"></i></div><b>0.51</b><div><i style="--bar:46%"></i><i style="--bar:74%"></i><i style="--bar:58%"></i><i style="--bar:86%"></i></div></div><small>ON-CHAIN MATCHING / PYTH SETTLEMENT</small></div><span class="media-label">SYSTEM VIEW</span></div>
+          <div class="gallery-card-body"><span class="card-meta">03 / SYSTEMS</span><h2>Meridian</h2><p>A Solana market prototype with an on-chain order book, Pyth settlement, and a Next.js interface.</p><div class="gallery-tags"><span>Solana</span><span>Anchor</span><span>Next.js</span></div><div class="gallery-links"><a href="https://github.com/hisefath/meridian" target="_blank" rel="noopener noreferrer">Explore source ↗</a></div></div>
+        </article>
+        <article class="gallery-card" data-categories="product" data-search="openspot parking driveway marketplace android maps mobile product">
+          <div class="gallery-media gallery-media--map"><div class="map-preview" aria-hidden="true"><span>OPENSPOT / NEARBY</span><div class="map-street map-street-a"></div><div class="map-street map-street-b"></div><b class="map-pin map-pin-a">P</b><b class="map-pin map-pin-b">P</b><b class="map-pin map-pin-c">P</b></div><span class="media-label">PRODUCT VIEW</span></div>
+          <div class="gallery-card-body"><span class="card-meta">04 / MOBILE PRODUCT</span><h2>OpenSpot</h2><p>A driveway marketplace for crowded cities, with Android screens and Google Maps, Places, and Firebase flows.</p><div class="gallery-tags"><span>Android</span><span>Kotlin</span><span>Firebase</span></div><div class="gallery-links"><a href="https://github.com/jayll/OpenSpot" target="_blank" rel="noopener noreferrer">Explore source ↗</a></div></div>
+        </article>
+        <article class="gallery-card" data-categories="ai product" data-search="bread secured gmail job application dashboard flask automl hackathon ai">
+          <div class="gallery-media gallery-media--inbox"><div class="inbox-preview" aria-hidden="true"><span>APPLICATION SIGNALS</span><div><i></i> Interview invitation <b>INTERVIEW</b></div><div><i></i> Application received <b>APPLIED</b></div><div><i></i> Offer letter <b>OFFER</b></div></div><span class="media-label">WORKFLOW VIEW</span></div>
+          <div class="gallery-card-body"><span class="card-meta">05 / AI · HACKATHON</span><h2>Bread Secured</h2><p>A hackathon project that translates job-application emails into a simple status dashboard.</p><div class="gallery-tags"><span>Flask</span><span>Gmail API</span><span>AutoML</span></div><div class="gallery-links"><a href="https://devpost.com/software/bread-secured" target="_blank" rel="noopener noreferrer">View on Devpost ↗</a></div></div>
+        </article>
+        <article class="gallery-card" data-categories="product" data-search="mytudo taskmanager to do mean stack angular mongodb express node">
+          <div class="gallery-media gallery-media--tasks"><div class="tasks-preview" aria-hidden="true"><span>MYTUDO / TODAY</span><div><b>✓</b> Plan the next sprint</div><div><b>✓</b> Build the interface</div><div><b></b> Ship and learn</div></div><span class="media-label">PRODUCT VIEW</span></div>
+          <div class="gallery-card-body"><span class="card-meta">06 / FULL STACK</span><h2>Mytudo</h2><p>A full-stack task manager for learning product development from authentication through deployment.</p><div class="gallery-tags"><span>Angular</span><span>MongoDB</span><span>Node.js</span></div><div class="gallery-links"><a href="https://github.com/hisefath/taskmanager" target="_blank" rel="noopener noreferrer">Explore source ↗</a></div></div>
+        </article>
+        <article class="gallery-card" data-categories="product" data-search="alphaeats restaurant search angular dotnet postgres web app">
+          <div class="gallery-media gallery-media--food"><div class="food-preview" aria-hidden="true"><span>ALPHAEATS</span><strong>Find somewhere good.</strong><div><i>Restaurant</i><i>Cuisine</i></div><small>SEARCH BY DISTANCE · RATING · PRICE</small></div><span class="media-label">PRODUCT VIEW</span></div>
+          <div class="gallery-card-body"><span class="card-meta">07 / FULL STACK</span><h2>AlphaEats</h2><p>A restaurant-search web app with an Angular front end, .NET backend, and PostgreSQL database.</p><div class="gallery-tags"><span>Angular</span><span>.NET</span><span>PostgreSQL</span></div><div class="gallery-links"><a href="https://github.com/hisefath/AlphaEats" target="_blank" rel="noopener noreferrer">Explore source ↗</a></div></div>
+        </article>
+        <article class="gallery-card" data-categories="community" data-search="immigranthub immigrant hub community storytelling hackathon">
+          <div class="gallery-media gallery-media--story"><div class="story-preview" aria-hidden="true"><span>IMMIGRANTHUB</span><strong>Every story<br>deserves a place.</strong><div>COMMUNITY / STORYTELLING / CONNECTION</div></div><span class="media-label">PROJECT THEME</span></div>
+          <div class="gallery-card-body"><span class="card-meta">08 / COMMUNITY</span><h2>ImmigrantHub</h2><p>A 2017 “I Stand With Immigrants” hackathon project centered on community storytelling.</p><div class="gallery-tags"><span>Hackathon</span><span>Community</span></div><div class="gallery-links"><a href="https://github.com/hisefath/ImmigrantHub" target="_blank" rel="noopener noreferrer">Explore source ↗</a></div></div>
+        </article>
+        <article class="gallery-card" data-categories="ai community" data-search="student virtual assistant voice campus data hackathon ai">
+          <div class="gallery-media gallery-media--assistant"><div class="assistant-preview" aria-hidden="true"><span>STUDENT ASSISTANT</span><div class="assistant-question">Where can I find help?</div><div class="assistant-answer">Ask about campus resources ↗</div></div><span class="media-label">WORKFLOW VIEW</span></div>
+          <div class="gallery-card-body"><span class="card-meta">09 / AI · HACKATHON</span><h2>Student Virtual Assistant</h2><p>A University at Buffalo hackathon experiment connecting a voice assistant with campus information.</p><div class="gallery-tags"><span>Voice</span><span>Campus data</span></div><div class="gallery-links"><a href="https://github.com/hisefath/StudentAssistant-" target="_blank" rel="noopener noreferrer">Explore source ↗</a></div></div>
+        </article>
+        <article class="gallery-card" data-categories="hardware" data-search="music reactive leds light sound embedded hardware">
+          <div class="gallery-media gallery-media--led"><div class="led-preview" aria-hidden="true"><span>MUSIC → LIGHT</span><div class="led-bars"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div><span class="media-label">HARDWARE VIEW</span></div>
+          <div class="gallery-card-body"><span class="card-meta">10 / HARDWARE</span><h2>Music Reactive LEDs</h2><p>An embedded experiment that translates sound into a responsive lighting setup.</p><div class="gallery-tags"><span>Embedded</span><span>Electronics</span></div><div class="gallery-links"><a href="https://github.com/hisefath/MusicReactiveLEDs" target="_blank" rel="noopener noreferrer">Explore source ↗</a></div></div>
+        </article>
+        <article class="gallery-card" data-categories="systems" data-search="cad automater construction moynihan documents file automation">
+          <div class="gallery-media gallery-media--cad"><div class="cad-preview" aria-hidden="true"><span>CAD / REVISION CONTROL</span><div><b>▣</b> Approved set <small>v04</small></div><div><b>▤</b> Bulletin 03 <small>filed</small></div><div><b>▤</b> Revision history <small>synced</small></div></div><span class="media-label">SYSTEM VIEW</span></div>
+          <div class="gallery-card-body"><span class="card-meta">11 / AUTOMATION</span><h2>CAD Automater</h2><p>Scripts for organizing current CAD documents while retaining approved sets and bulletin history.</p><div class="gallery-tags"><span>Automation</span><span>Construction</span></div><div class="gallery-links"><a href="https://github.com/hisefath/CADAutomater" target="_blank" rel="noopener noreferrer">Explore source ↗</a></div></div>
+        </article>
+        <article class="gallery-card" data-categories="community product" data-search="equal opportunity quiz random student classroom education tool">
+          <div class="gallery-media gallery-media--quiz"><div class="quiz-preview" aria-hidden="true"><span>CLASSROOM / FAIR TURN</span><strong>Who’s up next?</strong><b>↗</b></div><span class="media-label">PRODUCT VIEW</span></div>
+          <div class="gallery-card-body"><span class="card-meta">12 / COMMUNITY TOOL</span><h2>Equal Opportunity Quiz</h2><p>A classroom tool for selecting students at random, built as an early client project.</p><div class="gallery-tags"><span>Education</span><span>Web app</span></div><div class="gallery-links"><a href="https://github.com/hisefath/RandGenAAS100" target="_blank" rel="noopener noreferrer">Explore source ↗</a></div></div>
+        </article>
+      </div>
+      <div class="gallery-empty" id="gallery-empty" hidden><strong>No projects found.</strong><p>Try a different search or category.</p><button type="button" id="clear-filters">Show all projects</button></div>
+      <div class="gallery-end"><p>Looking for experiments and source code beyond this selection?</p><a href="https://github.com/hisefath?tab=repositories" target="_blank" rel="noopener noreferrer">Browse every GitHub repository ↗</a></div>
+    </section>
+    <section class="factory-section section-wrap" id="factory" aria-labelledby="factory-title"><p class="section-kicker">HOW I BUILD <span>005 / AI-NATIVE WORKFLOW</span></p><div class="factory-heading"><div><h2 id="factory-title">A system for <em>building systems.</em></h2><p>Software Factory Kit gives AI-assisted work a repeatable structure. I define the intent and make decisions at gates; agents handle bounded investigation, implementation, and tests; independent checks verify the result.</p></div><a class="text-link" href="https://github.com/hisefath/software-factory-kit/blob/main/docs/WORKFLOW.md" target="_blank" rel="noopener noreferrer">Read the workflow spec <span aria-hidden="true">↗</span></a></div><ol class="factory-steps"><li><span>01 / DEFINE</span><h3>Product intent</h3><p>Sharpen the brief, gather evidence, and write requirements before implementation.</p><code>sharpen-brief → write-prd</code></li><li><span>02 / DESIGN</span><h3>System boundaries</h3><p>Map the architecture, interfaces, acceptance criteria, and work slices.</p><code>design-hld → slice-tasks</code></li><li><span>03 / BUILD</span><h3>Bounded execution</h3><p>Assign work to agents with explicit file ownership and a clear definition of done.</p><code>implement-task</code></li><li><span>04 / VERIFY</span><h3>Independent evidence</h3><p>Run quality and security checks, review the diff, and record failures to improve the kit.</p><code>verifier → route-failure</code></li></ol><div class="factory-note"><strong>Where the human stays in the loop</strong><p>Approval gates cover product intent, architecture, milestone decisions, and shipping. The repository documents the gates, skills, scripts, and the evolving failure log.</p><a href="https://github.com/hisefath/software-factory-kit" target="_blank" rel="noopener noreferrer">Browse the kit ↗</a></div></section>
+  </main>
+  <footer class="site-footer section-wrap"><span>© 2026 Sefath Chowdhury</span><span>MADE TO KEEP BUILDING <span aria-hidden="true">✳</span></span><a href="index.html#top">Back to portfolio ↑</a></footer>
+</body>
+</html>
