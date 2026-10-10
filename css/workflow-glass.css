@@ -1,0 +1,122 @@
+/* Neutral glass surfaces leave the amber horizon and key ideas as the light sources. */
+body[data-theme="dark"] {
+  --bg: #07090d;
+  --ink: #f1f2ee;
+  --muted: #b3b7b5;
+  --line: rgba(242, 190, 92, .18);
+  --card: rgba(18, 22, 27, .72);
+  --soft: rgba(25, 29, 34, .64);
+  --nav: rgba(11, 15, 20, .76);
+  --accent: #f4bd57;
+  --accent-deep: #e9a544;
+  background: #07090d;
+  color: var(--ink);
+}
+body[data-theme="dark"] .nav-shell {
+  border-color: rgba(255, 210, 121, .19);
+  background: rgba(11, 15, 20, .72);
+  box-shadow: inset 0 1px rgba(255, 255, 255, .08), 0 15px 42px rgba(0, 0, 0, .28);
+}
+body[data-theme="dark"] .button-primary { background: #f4bd57; color: #15110a; }
+body[data-theme="dark"] .button-primary:hover { background: #ffd075; color: #15110a; }
+.workflow-atmosphere {
+  z-index: -1;
+  overflow: hidden;
+  background: radial-gradient(ellipse 65% 32% at 50% 105%, rgba(196, 94, 16, .16), transparent 70%), #07090d;
+}
+.workflow-atmosphere::before {
+  content: "";
+  position: absolute;
+  width: min(62vw, 820px);
+  aspect-ratio: 1;
+  top: -19%;
+  right: -12%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(248, 166, 43, .17), rgba(241, 115, 20, .07) 32%, transparent 69%);
+  animation: ambient-drift 24s ease-in-out infinite alternate;
+}
+.workflow-atmosphere::after {
+  background: repeating-radial-gradient(ellipse at 50% 130%, transparent 0 30px, rgba(246, 160, 50, .075) 31px, transparent 32px 65px);
+  mask-image: linear-gradient(180deg, transparent, black 40%, transparent 94%);
+}
+@keyframes ambient-drift {
+  to { transform: translate(-16vw, 18vh) scale(1.16); opacity: .58; }
+}
+.workflow-hero h1 em, .thesis h2 em, .section-heading-workflow h2 em,
+.boundaries-section h2 em, .learning-section h2 em, .questions-section h2 em,
+.source-section h2 em, .decision-section h2 em {
+  color: #f5b74e;
+  text-shadow: 0 0 38px rgba(235, 141, 34, .25);
+}
+.workflow-hero-lede, .thesis-grid p, .section-heading-workflow p:not(.section-kicker),
+.layer-content p, .run-track p, .ownership-grid p, .learning-grid > div:first-child p,
+.learning-ledger p, .question-grid p, .source-section p:not(.section-kicker),
+.decision-section > div:first-child > p:not(.section-kicker) { color: #b8bec0; }
+.layer-heading small, .run-footnote, .boundary-note, .site-footer, .system-footer { color: #a6adaf; }
+.hero-system, .ownership-grid article, .decision-card {
+  border: 1px solid rgba(255, 205, 112, .23);
+  background: linear-gradient(145deg, rgba(38, 44, 49, .55), rgba(9, 13, 18, .78) 48%, rgba(11, 16, 22, .7));
+  box-shadow: inset 0 1px rgba(255, 255, 255, .1), inset 0 -1px rgba(255, 186, 75, .06), 0 24px 70px rgba(0, 0, 0, .31);
+  -webkit-backdrop-filter: blur(16px) saturate(120%);
+  backdrop-filter: blur(16px) saturate(120%);
+}
+.hero-system::before {
+  content: "";
+  position: absolute;
+  inset: -20%;
+  pointer-events: none;
+  background: radial-gradient(circle at 51% 45%, rgba(250, 188, 70, .18), rgba(232, 114, 20, .07) 24%, transparent 49%);
+  animation: glass-glow 11s ease-in-out infinite alternate;
+}
+.hero-system::after { border-color: rgba(255, 180, 62, .55); box-shadow: 0 -14px 62px rgba(242, 130, 23, .21); }
+.system-orbit::before { border-color: rgba(255, 198, 104, .25); }
+.system-orbit::after { border-color: rgba(255, 198, 104, .14); }
+.orbit-core {
+  border-color: rgba(255, 202, 103, .55);
+  background: radial-gradient(circle at 35% 25%, rgba(244, 180, 68, .2), rgba(20, 25, 30, .96) 65%);
+  box-shadow: 0 0 58px rgba(234, 143, 31, .19), inset 0 1px rgba(255, 232, 169, .16);
+}
+.orbit-node, .layer-artifact code {
+  border-color: rgba(255, 192, 88, .3);
+  background: rgba(16, 21, 27, .76);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+.workflow-actions .button-quiet {
+  background: rgba(20, 25, 31, .75);
+  border-color: rgba(255, 194, 93, .27);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+}
+.workflow-jump, .layers-section, .boundaries-section, .questions-section { border-color: rgba(245, 181, 77, .17); }
+.layers-section, .boundaries-section { background: linear-gradient(150deg, rgba(23, 29, 36, .71), rgba(8, 12, 17, .8) 60%); }
+.questions-section { background: radial-gradient(ellipse at 50% 105%, rgba(209, 96, 18, .17), transparent 58%), rgba(9, 13, 18, .7); }
+.layer-list, .layer-list details, .run-track, .run-track li, .learning-ledger,
+.learning-ledger > div, .source-links, .source-links a, .question-grid article,
+.decision-card > span, .decision-card > div { border-color: rgba(245, 183, 83, .2); }
+.layer-list details[open] { background: radial-gradient(ellipse at 8% 4%, rgba(241, 161, 43, .075), transparent 54%); }
+.ownership-grid article, .decision-card { position: relative; overflow: hidden; }
+.ownership-grid article::before, .decision-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at 83% 0%, rgba(255, 185, 65, .15), transparent 45%);
+  opacity: .45;
+  transition: opacity .6s ease;
+}
+.ownership-grid article:hover::before, .decision-card:hover::before { opacity: 1; }
+.decision-card > span, .decision-card > div { position: relative; z-index: 1; }
+.hero-system, .decision-card, .ownership-grid article, .layer-list details { transition: border-color 1.4s ease, box-shadow 1.4s ease; }
+.hero-system.is-glowing, .decision-card.is-glowing, .ownership-grid article.is-glowing {
+  border-color: rgba(255, 204, 105, .48);
+  box-shadow: inset 0 1px rgba(255, 255, 255, .13), 0 0 38px rgba(236, 149, 34, .13), 0 24px 70px rgba(0, 0, 0, .3);
+}
+.layer-list details.is-glowing { box-shadow: inset 4px 0 rgba(245, 181, 77, .63), inset 24px 0 48px rgba(226, 134, 24, .07); }
+@keyframes glass-glow {
+  to { transform: translate(8%, 4%) scale(1.08); opacity: .55; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .workflow-atmosphere::before, .hero-system::before { animation: none; }
+  .hero-system, .decision-card, .ownership-grid article, .layer-list details { transition: none; }
+}
