@@ -134,63 +134,80 @@ body[data-theme="dark"] :is(.ai-board, .project-card, .projects .project-card,
   }
 }
 
-/* A five-second warm, Siri-like light pass on each viewport entry. The pseudo
-   elements exist only during the pulse so idle scrolling has no filter cost. */
-@property --archive-glow-angle {
+/* The workflow link is a clear glass control, ready for the same light pass. */
+body[data-theme="dark"] .ai-section .workflow-spotlight-link {
+  display: inline-flex;
+  margin-top: 5px;
+  padding: 12px 16px;
+  border: 1px solid rgba(255, 255, 255, .28);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, .025);
+  box-shadow: inset 0 1px rgba(255, 255, 255, .3);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+}
+body[data-theme="dark"] .ai-section .workflow-spotlight-link:is(:hover, :focus-visible) {
+  border-color: rgba(255, 217, 143, .64);
+  box-shadow: inset 0 1px rgba(255, 255, 255, .4), 0 0 20px rgba(242, 166, 54, .2);
+}
+
+/* Five seconds of warm light on each viewport entry. The pseudo elements
+   exist only during the pulse so idle scrolling has no filter cost. */
+@property --viewport-glow-angle {
   syntax: "<angle>";
   inherits: false;
   initial-value: 0deg;
 }
 
-.project-archive-cta {
+.viewport-glow-target {
   position: relative;
   isolation: isolate;
 }
-.project-archive-cta.archive-spotlight-active {
-  animation: archive-halo 5s ease-out both;
+.viewport-glow-target.is-viewport-glowing {
+  animation: viewport-halo 5s ease-out both;
 }
-.project-archive-cta.archive-spotlight-active::before,
-.project-archive-cta.archive-spotlight-active::after {
+.viewport-glow-target.is-viewport-glowing::before,
+.viewport-glow-target.is-viewport-glowing::after {
   content: "";
   position: absolute;
   z-index: 1;
   pointer-events: none;
   border-radius: inherit;
-  background: conic-gradient(from var(--archive-glow-angle), transparent 0deg, rgba(255, 255, 255, .18) 35deg, #ffe6a5 75deg, #f7b44c 115deg, #e7862c 150deg, transparent 205deg, transparent 360deg);
+  background: conic-gradient(from var(--viewport-glow-angle), transparent 0deg, rgba(255, 255, 255, .18) 35deg, #ffe6a5 75deg, #f7b44c 115deg, #e7862c 150deg, transparent 205deg, transparent 360deg);
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite: xor;
   mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   mask-composite: exclude;
-  animation: archive-glow-orbit 5s ease-in-out both, archive-glow-fade 5s ease-out both;
+  animation: viewport-glow-orbit 5s ease-in-out both, viewport-glow-fade 5s ease-out both;
 }
-.project-archive-cta.archive-spotlight-active::before {
+.viewport-glow-target.is-viewport-glowing::before {
   inset: -8px;
   padding: 8px;
   filter: blur(13px);
   opacity: .72;
 }
-.project-archive-cta.archive-spotlight-active::after {
+.viewport-glow-target.is-viewport-glowing::after {
   inset: -2px;
   padding: 2px;
   box-shadow: 0 0 22px rgba(245, 166, 57, .12);
 }
-@keyframes archive-glow-orbit { to { --archive-glow-angle: 360deg; } }
-@keyframes archive-halo {
+@keyframes viewport-glow-orbit { to { --viewport-glow-angle: 360deg; } }
+@keyframes viewport-halo {
   0%, 100% { box-shadow: inset 0 1px rgba(255, 255, 255, .21), 0 18px 44px rgba(0, 0, 0, .17); }
   18%, 66% { box-shadow: inset 0 1px rgba(255, 255, 255, .42), 0 0 23px rgba(255, 211, 124, .42), 0 0 55px rgba(235, 137, 34, .24), 0 18px 44px rgba(0, 0, 0, .17); }
 }
-@keyframes archive-glow-fade {
+@keyframes viewport-glow-fade {
   0% { opacity: 0; }
   16%, 62% { opacity: 1; }
   100% { opacity: 0; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .project-archive-cta.archive-spotlight-active {
+  .viewport-glow-target.is-viewport-glowing {
     animation: none;
     box-shadow: inset 0 1px rgba(255, 255, 255, .32), 0 0 24px rgba(255, 211, 124, .25);
   }
-  .project-archive-cta.archive-spotlight-active::before,
-  .project-archive-cta.archive-spotlight-active::after {
+  .viewport-glow-target.is-viewport-glowing::before,
+  .viewport-glow-target.is-viewport-glowing::after {
     animation: none;
     background: linear-gradient(120deg, rgba(255, 230, 165, .55), rgba(247, 180, 76, .68));
   }

@@ -5,7 +5,9 @@ import { createStreakField } from './streaks.js';
 import { initWorkflowScene } from './workflow.js';
 
 const SKYLINE_BASE = -2.32;
+const GROUND_MARGIN = 0.06;
 const stage = document.querySelector('#portfolio-city-stage');
+const mobileInteractionZone = document.querySelector('#city-interaction-zone');
 const atmosphere = document.querySelector('#site-signal-canvas');
 if (atmosphere) initWorkflowScene(atmosphere);
 
@@ -96,6 +98,7 @@ if (stage) {
     const ring = document.querySelector('#city-field-ring');
     let pointerActive = false;
     let heldId = null;
+    let heldSurface = null;
     let holdStart = 0;
     let burstUntil = 0;
     let suppressHoverUntil = 0;
@@ -139,14 +142,15 @@ if (stage) {
       const width = stage.clientWidth;
       const height = stage.clientHeight;
       if (!width || !height) return;
-      const viewWidth = width < 700 ? 9.6 : 16.8;
+      const viewWidth = width < 700 ? 7.8 : 16.8;
       const viewHeight = viewWidth * height / width;
       camera.left = -viewWidth / 2;
       camera.right = viewWidth / 2;
       camera.top = viewHeight / 2;
       camera.bottom = -viewHeight / 2;
       camera.updateProjectionMatrix();
-      group.position.y = camera.bottom + (width < 700 ? 0.85 : 1.2) - SKYLINE_BASE;
+      // Keep the ground line just inside the canvas edge at every viewport size.
+      group.position.y = camera.bottom + GROUND_MARGIN - SKYLINE_BASE;
       renderer.setSize(width, height, false);
       renderer.render(scene, camera);
     }
@@ -169,26 +173,31 @@ if (stage) {
       uniforms.uBurstCenter.value.copy(center);
       burstUntil = performance.now() + duration;
     }
-    stage.addEventListener('pointerenter', mapPointer);
-    stage.addEventListener('pointermove', mapPointer);
-    stage.addEventListener('pointerleave', () => {
-      pointerActive = false;
-      if (heldId === null) ring.classList.remove('visible');
-    });
-    stage.addEventListener('pointerdown', event => {
-      if (reducedMotion) return;
-      mapPointer(event);
-      stage.setPointerCapture(event.pointerId);
-      heldId = event.pointerId;
-      holdStart = performance.now();
-      holdCenter.copy(pointerTarget);
-      ring.classList.add('visible');
-      if (event.pointerType === 'touch') touchReleaseAt = holdStart + 950;
-    });
-    function release(event) {
+    for (const surface of [stage, mobileInteractionZone].filter(Boolean)) {
+      surface.addEventListener('pointerenter', mapPointer);
+      surface.addEventListener('pointermove', mapPointer);
+      surface.addEventListener('pointerleave', () => {
+        pointerActive = false;
+        if (heldId === null) ring.classList.remove('visible');
+      });
+      surface.addEventListener('pointerdown', event => {
+        if (reducedMotion) return;
+        mapPointer(event);
+        surface.setPointerCapture(event.pointerId);
+        heldId = event.pointerId;
+        heldSurface = surface;
+        holdStart = performance.now();
+        holdCenter.copy(pointerTarget);
+        ring.classList.add('visible');
+        if (event.pointerType === 'touch') touchReleaseAt = holdStart + 950;
+      });
+      surface.addEventListener('pointerup', release);
+      surface.addEventListener('pointercancel', event => release(event, true));
+    }
+    function release(event, cancelled = false) {
       if (event.pointerId !== heldId) return;
       const now = performance.now();
-      if (now - holdStart < 230) triggerBurst(holdCenter, 650);
+      if (!cancelled && now - holdStart < 230) triggerBurst(holdCenter, 650);
       else {
         burstCenter.copy(holdCenter);
         uniforms.uBurstCenter.value.copy(holdCenter);
@@ -199,11 +208,10 @@ if (stage) {
       }
       heldId = null;
       ring.classList.remove('visible');
-      if (stage.hasPointerCapture(event.pointerId)) stage.releasePointerCapture(event.pointerId);
-      if (event.pointerType === 'touch' && now - holdStart < 230) touchReleaseAt = now + 900;
+      if (heldSurface?.hasPointerCapture(event.pointerId)) heldSurface.releasePointerCapture(event.pointerId);
+      heldSurface = null;
+      if (!cancelled && event.pointerType === 'touch' && now - holdStart < 230) touchReleaseAt = now + 900;
     }
-    stage.addEventListener('pointerup', release);
-    stage.addEventListener('pointercancel', release);
     new IntersectionObserver(([entry]) => {
       const wasVisible = visible;
       visible = entry.isIntersecting;
