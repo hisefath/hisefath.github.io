@@ -6,6 +6,8 @@ import { initWorkflowScene } from './workflow.js';
 
 const SKYLINE_BASE = -2.32;
 const GROUND_MARGIN = 0.06;
+const PANORAMA_SPAN = 24;
+const PANORAMA_START = -8;
 const stage = document.querySelector('#portfolio-city-stage');
 const mobileInteractionZone = document.querySelector('#city-interaction-zone');
 const atmosphere = document.querySelector('#site-signal-canvas');
@@ -29,6 +31,8 @@ if (stage) {
     camera.position.set(0, 0, 12);
     const group = new THREE.Group();
     scene.add(group);
+    const cityBand = new THREE.Group();
+    group.add(cityBand);
     const uniforms = {
       uTime: { value: 0 },
       uCraneTime: { value: 0 },
@@ -68,7 +72,7 @@ if (stage) {
     for (const [name, attribute] of Object.entries(geometry.attributes)) glassGeometry.setAttribute(name, attribute);
     glassGeometry.setIndex(glassFaces);
     geometry.setIndex(solidFaces);
-    group.add(new THREE.Mesh(geometry, new THREE.ShaderMaterial({
+    cityBand.add(new THREE.Mesh(geometry, new THREE.ShaderMaterial({
       vertexShader, fragmentShader, uniforms, side: THREE.DoubleSide,
       extensions: { derivatives: true },
     })));
@@ -83,9 +87,9 @@ if (stage) {
       extensions: { derivatives: true },
     }));
     glassMesh.renderOrder = 1;
-    group.add(glassMesh);
-    group.add(new THREE.Line(
-      new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-8.1, -2.34, -.6), new THREE.Vector3(8.1, -2.34, -.6)]),
+    cityBand.add(glassMesh);
+    cityBand.add(new THREE.Line(
+      new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-8.1, -2.34, -.6), new THREE.Vector3(16.3, -2.34, -.6)]),
       new THREE.LineBasicMaterial({ color: 0xd6ae55, transparent: true, opacity: .52 }),
     ));
 
@@ -94,7 +98,14 @@ if (stage) {
     const burstCenter = new THREE.Vector2();
     const holdCenter = new THREE.Vector2();
     const streakField = createStreakField(faceCenters, geometry.attributes.aCenter, values, burstWeights, pointer, burstCenter);
-    group.add(streakField.lines);
+    cityBand.add(streakField.lines);
+    // Share geometry and shader state across neighboring copies. Only the
+    // visible portion of each band is drawn, avoiding a reset at the seam.
+    for (const offset of [-PANORAMA_SPAN, PANORAMA_SPAN]) {
+      const repeat = cityBand.clone();
+      repeat.position.x = offset;
+      group.add(repeat);
+    }
     const ring = document.querySelector('#city-field-ring');
     let pointerActive = false;
     let heldId = null;
@@ -110,6 +121,7 @@ if (stage) {
     let nextAutoBurstAt = lastTime + 10000 + Math.random() * 90000;
     let hasMotion = true;
     let introStartedAt = 0;
+    let panoramaTime = 0;
 
     function scatterForEntry() {
       uniforms.uCraneTime.value = 0;
@@ -142,7 +154,7 @@ if (stage) {
       const width = stage.clientWidth;
       const height = stage.clientHeight;
       if (!width || !height) return;
-      const viewWidth = width < 700 ? 7.8 : 16.8;
+      const viewWidth = width < 700 ? 6.7 : 15.2;
       const viewHeight = viewWidth * height / width;
       camera.left = -viewWidth / 2;
       camera.right = viewWidth / 2;
@@ -159,8 +171,10 @@ if (stage) {
 
     function mapPointer(event) {
       const bounds = stage.getBoundingClientRect();
+      const worldX = camera.left + (event.clientX - bounds.left) / bounds.width * (camera.right - camera.left) - group.position.x;
+      const cityX = ((worldX - PANORAMA_START) % PANORAMA_SPAN + PANORAMA_SPAN) % PANORAMA_SPAN + PANORAMA_START;
       pointerTarget.set(
-        camera.left + (event.clientX - bounds.left) / bounds.width * (camera.right - camera.left),
+        cityX,
         camera.top - (event.clientY - bounds.top) / bounds.height * (camera.top - camera.bottom) - group.position.y,
       );
       pointerActive = true;
@@ -250,6 +264,16 @@ if (stage) {
       if (reducedMotion) return;
       uniforms.uTime.value += dt;
       uniforms.uCraneTime.value += dt;
+      panoramaTime += dt;
+      if (stage.clientWidth < 700) {
+        // A full circuit takes several minutes, even on a narrow phone.
+        group.position.x = -(panoramaTime * 0.12 % PANORAMA_SPAN);
+      } else {
+        const step = Math.floor(panoramaTime / 7.4);
+        const phase = panoramaTime % 7.4;
+        const travel = THREE.MathUtils.smoothstep(phase, 6, 7.4);
+        group.position.x = -((step + travel) * 2.0 % PANORAMA_SPAN);
+      }
       if (now >= nextAutoBurstAt && heldId === null) {
         const face = Math.floor(Math.random() * triangleCount);
         triggerBurst(new THREE.Vector2(faceCenters[face * 2], faceCenters[face * 2 + 1]), 1000);
