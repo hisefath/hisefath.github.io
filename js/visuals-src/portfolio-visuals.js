@@ -118,7 +118,12 @@ if (stage) {
     let frame = 0;
     let lastPaint = 0;
     let lastTime = performance.now();
-    let nextAutoBurstAt = lastTime + 10000 + Math.random() * 90000;
+    const mobileView = () => stage.clientWidth < 700;
+    const burstDelay = (first = false) => mobileView()
+      ? first ? 5500 + Math.random() * 3000 : 9000 + Math.random() * 9000
+      : 10000 + Math.random() * 90000;
+    let nextAutoBurstAt = lastTime + burstDelay(true);
+    let lastMobileBurstZone = -1;
     let hasMotion = true;
     let introStartedAt = 0;
     let panoramaTime = 0;
@@ -190,6 +195,27 @@ if (stage) {
       uniforms.uBurstCenter.value.copy(center);
       burstUntil = performance.now() + duration;
     }
+    function randomVisibleBurstCenter() {
+      const zones = [[], [], [], []];
+      const viewWidth = camera.right - camera.left;
+      for (let i = 0; i < triangleCount; i++) {
+        if (!movable[i] || faceCenters[i * 2 + 1] < SKYLINE_BASE + .65) continue;
+        for (const offset of [-PANORAMA_SPAN, 0, PANORAMA_SPAN]) {
+          const screenX = faceCenters[i * 2] + offset + group.position.x;
+          const screenY = faceCenters[i * 2 + 1] + group.position.y;
+          if (screenX < camera.left + .25 || screenX > camera.right - .25 || screenY < camera.bottom || screenY > camera.top) continue;
+          const zone = Math.min(3, Math.floor((screenX - camera.left) / viewWidth * 4));
+          zones[zone].push(i);
+        }
+      }
+      const available = zones.map((faces, index) => faces.length && index !== lastMobileBurstZone ? index : -1).filter(index => index >= 0);
+      const choices = available.length ? available : zones.map((faces, index) => faces.length ? index : -1).filter(index => index >= 0);
+      if (!choices.length) return new THREE.Vector2(0, 0);
+      const zone = choices[Math.floor(Math.random() * choices.length)];
+      lastMobileBurstZone = zone;
+      const face = zones[zone][Math.floor(Math.random() * zones[zone].length)];
+      return new THREE.Vector2(faceCenters[face * 2], faceCenters[face * 2 + 1]);
+    }
     for (const surface of [stage, mobileInteractionZone].filter(Boolean)) {
       surface.addEventListener('pointerenter', mapPointer);
       surface.addEventListener('pointermove', mapPointer);
@@ -241,7 +267,7 @@ if (stage) {
         scatterForEntry();
         lastTime = performance.now();
         lastPaint = 0;
-        nextAutoBurstAt = lastTime + 10000 + Math.random() * 90000;
+        nextAutoBurstAt = lastTime + burstDelay(true);
         schedule();
       }
     }, { threshold: .02 }).observe(stage);
@@ -268,9 +294,9 @@ if (stage) {
       uniforms.uTime.value += dt;
       uniforms.uCraneTime.value += dt;
       panoramaTime += dt;
-      if (stage.clientWidth < 700) {
+      if (mobileView()) {
         // A full circuit takes several minutes, even on a narrow phone.
-        group.position.x = -(panoramaTime * 0.12 % PANORAMA_SPAN);
+        group.position.x = -(panoramaTime * 0.075 % PANORAMA_SPAN);
       } else {
         const step = Math.floor(panoramaTime / 7.4);
         const phase = panoramaTime % 7.4;
@@ -279,8 +305,9 @@ if (stage) {
       }
       if (now >= nextAutoBurstAt && heldId === null) {
         const face = Math.floor(Math.random() * triangleCount);
-        triggerBurst(new THREE.Vector2(faceCenters[face * 2], faceCenters[face * 2 + 1]), 1000);
-        nextAutoBurstAt = now + 10000 + Math.random() * 90000;
+        const center = mobileView() ? randomVisibleBurstCenter() : new THREE.Vector2(faceCenters[face * 2], faceCenters[face * 2 + 1]);
+        triggerBurst(center, 1000);
+        nextAutoBurstAt = now + burstDelay();
       }
       if (!pointerActive && now > touchReleaseAt) pointerTarget.set(100, 100);
       pointer.lerp(pointerTarget, 1 - Math.exp(-dt * 18));
@@ -305,13 +332,14 @@ if (stage) {
         renderer.render(scene, camera);
         return;
       }
+      const burstRadius = mobileView() ? 2.2 : 3.5;
       let moving = false;
       for (let i = 0; i < triangleCount; i++) {
         if (!movable[i]) continue;
         const x = faceCenters[i * 2];
         const y = faceCenters[i * 2 + 1];
         const proximity = hoverActive ? 1 - THREE.MathUtils.smoothstep(Math.hypot(x - pointer.x, y - pointer.y), fieldRadius * .16, fieldRadius) : 0;
-        const burst = burstActive ? burstEnvelope * (1 - THREE.MathUtils.smoothstep(Math.hypot(x - burstCenter.x, y - burstCenter.y), 0, 3.5)) : 0;
+        const burst = burstActive ? burstEnvelope * (1 - THREE.MathUtils.smoothstep(Math.hypot(x - burstCenter.x, y - burstCenter.y), 0, burstRadius)) : 0;
         const hold = holdActive ? 1.15 * (1 - THREE.MathUtils.smoothstep(Math.hypot(x - holdCenter.x, y - holdCenter.y), holdRadius * .38, holdRadius)) : 0;
         // Hold the opening burst briefly so the assembly is visible even while
         // the browser is compiling its first WebGL frame.
