@@ -54,10 +54,34 @@ if (stage) {
       geometry.attributes.aInfluence.needsUpdate = true;
       burstAttribute.needsUpdate = true;
     }
+    // Both meshes share the same vertex and animation buffers. Separate index
+    // lists avoid running the skyline vertex shader twice for every face.
+    const solidFaces = [];
+    const glassFaces = [];
+    const kinds = geometry.attributes.aKind.array;
+    for (let vertex = 0; vertex < kinds.length; vertex += 3) {
+      (kinds[vertex] > 9.5 ? glassFaces : solidFaces).push(vertex, vertex + 1, vertex + 2);
+    }
+    const glassGeometry = new THREE.BufferGeometry();
+    for (const [name, attribute] of Object.entries(geometry.attributes)) glassGeometry.setAttribute(name, attribute);
+    glassGeometry.setIndex(glassFaces);
+    geometry.setIndex(solidFaces);
     group.add(new THREE.Mesh(geometry, new THREE.ShaderMaterial({
       vertexShader, fragmentShader, uniforms, side: THREE.DoubleSide,
       extensions: { derivatives: true },
     })));
+    const glassMesh = new THREE.Mesh(glassGeometry, new THREE.ShaderMaterial({
+      vertexShader,
+      fragmentShader: `#define GLASS_PASS\n${fragmentShader}`,
+      uniforms,
+      side: THREE.DoubleSide,
+      transparent: true,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+      extensions: { derivatives: true },
+    }));
+    glassMesh.renderOrder = 1;
+    group.add(glassMesh);
     group.add(new THREE.Line(
       new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-8.1, -2.34, -.6), new THREE.Vector3(8.1, -2.34, -.6)]),
       new THREE.LineBasicMaterial({ color: 0xd6ae55, transparent: true, opacity: .52 }),

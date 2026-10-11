@@ -221,17 +221,22 @@ export function createCityGeometry() {
     const z = 0.58;
     rectangle(x - 0.54, BASE, x + 0.54, BASE + 0.71, z, 0, 0.64);
     rectangle(x - 0.63, BASE + 0.68, x + 0.63, BASE + 0.76, z + 0.02, 5, 0.65);
-    // Leave the dome open so the atmosphere shows through its glass-like frame.
-    outline([[x - 0.39, BASE + 0.76], [x - 0.33, BASE + 1.03], [x - 0.18, BASE + 1.28],
-      [x, BASE + 1.38], [x + 0.18, BASE + 1.28], [x + 0.33, BASE + 1.03],
-      [x + 0.39, BASE + 0.76]], z + 0.07, 6, 0.75, 0.014);
-    for (const offset of [-0.19, 0, 0.19]) {
-      beam([x + offset * 1.65, BASE + 0.78], [x + offset, BASE + 1.28 - Math.abs(offset) * 0.48], 0.008, z + 0.06, 8, 0.35);
+    // A pointed, curved dome has real translucent panes, so its shards can
+    // scatter with the rest of the city while the horizon remains visible.
+    const dome = Array.from({ length: 17 }, (_, index) => {
+      const angle = Math.PI - index * Math.PI / 16;
+      return [x + Math.cos(angle) * 0.39, BASE + 0.76 + Math.sin(angle) * 0.58];
+    });
+    polygon(dome, z + 0.04, 10, 0.75);
+    outline(dome, z + 0.07, 6, 0.75, 0.014);
+    for (const offset of [-0.22, 0, 0.22]) {
+      beam([x + offset * 1.55, BASE + 0.77], [x + offset, BASE + 1.30 - Math.abs(offset) * 0.35], 0.008, z + 0.08, 8, 0.35);
     }
+    beam([x, BASE + 1.34], [x, BASE + 1.57], 0.012, z + 0.08, 6, 0.83);
     for (const side of [-1, 1]) {
       const minaretX = x + side * 0.57;
       rectangle(minaretX - 0.07, BASE, minaretX + 0.07, BASE + 1.45, z + 0.05, 0, 0.65);
-      polygon([[minaretX - 0.10, BASE + 1.45], [minaretX, BASE + 1.70], [minaretX + 0.10, BASE + 1.45]], z + 0.07, 5, 0.79);
+      polygon([[minaretX - 0.10, BASE + 1.45], [minaretX, BASE + 1.70], [minaretX + 0.10, BASE + 1.45]], z + 0.07, 10, 0.79);
       beam([minaretX, BASE + 1.70], [minaretX, BASE + 1.89], 0.015, z + 0.08, 6, 0.85);
     }
     for (const offset of [-0.31, 0, 0.31]) {
@@ -268,7 +273,7 @@ export function createCityGeometry() {
   beam([-2.82, top], [-2.82, top + 0.43], 0.020, 0.28, 6, 0.85);
 
   top = tower(-2.34, 0.42, 2.18, 0.50, { windows: 0.57 });
-  polygon([[-2.55, top], [-2.48, top + 0.28], [-2.34, top + 0.45], [-2.20, top + 0.28], [-2.13, top]], 0.23, 2, 0.83);
+  polygon([[-2.55, top], [-2.48, top + 0.28], [-2.34, top + 0.45], [-2.20, top + 0.28], [-2.13, top]], 0.23, 10, 0.83);
   for (let tier = 0; tier < 3; tier++) {
     const y = top + tier * 0.12;
     const half = 0.20 - tier * 0.055;
@@ -286,7 +291,7 @@ export function createCityGeometry() {
   beam([-0.98, BASE + 1.10], [-0.98, 0.30], 0.065, 0.30, 2, 0.66);
   beam([-1.12, BASE + 0.20], [-0.98, 0.30], 0.023, 0.31, 6, 0.52);
   beam([-0.84, BASE + 0.20], [-0.98, 0.30], 0.023, 0.31, 6, 0.52);
-  ellipse(-0.98, 0.49, 0.28, 0.27, 0.35, 2, 0.64, 16);
+  ellipse(-0.98, 0.49, 0.28, 0.27, 0.35, 10, 0.64, 16);
   const reunionRing = Array.from({ length: 17 }, (_, i) => {
     const angle = i * Math.PI * 2 / 16;
     return [-0.98 + Math.cos(angle) * 0.28, 0.49 + Math.sin(angle) * 0.27];
@@ -301,14 +306,14 @@ export function createCityGeometry() {
   rectangle(-0.27, BASE + 1.34, 0.07, BASE + 1.54, 0.30, 2, 0.61);
   const domeY = BASE + 1.54;
   polygon([[-0.27, domeY], [-0.22, domeY + 0.22], [-0.10, domeY + 0.36],
-    [0.02, domeY + 0.22], [0.07, domeY]], 0.32, 2, 0.76);
+    [0.02, domeY + 0.22], [0.07, domeY]], 0.32, 10, 0.76);
   outline([[-0.27, domeY], [-0.22, domeY + 0.22], [-0.10, domeY + 0.36],
     [0.02, domeY + 0.22], [0.07, domeY]], 0.37, 6, 0.54, 0.015);
   beam([-0.10, domeY + 0.35], [-0.10, domeY + 0.51], 0.018, 0.38, 6, 0.78);
 
   top = tower(0.86, 0.57, 2.64, 0.61, { windows: 0.48 });
   polygon([[0.575, top], [0.67, top + 0.24], [0.77, top + 0.35],
-    [0.86, top + 0.60], [0.95, top + 0.35], [1.05, top + 0.24], [1.145, top]], 0.27, 2, 0.84);
+    [0.86, top + 0.60], [0.95, top + 0.35], [1.05, top + 0.24], [1.145, top]], 0.27, 10, 0.84);
   outline([[0.575, top], [0.67, top + 0.24], [0.86, top + 0.60],
     [1.05, top + 0.24], [1.145, top]], 0.33, 6, 0.75, 0.020);
   beam([0.69, top + 0.17], [1.03, top + 0.17], 0.014, 0.34, 6, 0.74);
@@ -325,15 +330,15 @@ export function createCityGeometry() {
   beam([needleX, BASE], [needleX, 0.22], 0.042, 0.33, 2, 0.65);
   beam([needleX - 0.16, -0.85], [needleX + 0.16, -0.85], 0.025, 0.37, 6, 0.58);
   beam([needleX - 0.10, -0.13], [needleX + 0.10, -0.13], 0.025, 0.37, 6, 0.58);
-  ellipse(needleX, 0.29, 0.45, 0.15, 0.39, 2, 0.83, 16);
-  ellipse(needleX, 0.34, 0.34, 0.09, 0.42, 5, 0.69, 16);
+  ellipse(needleX, 0.29, 0.45, 0.15, 0.39, 10, 0.83, 16);
+  ellipse(needleX, 0.34, 0.34, 0.09, 0.42, 10, 0.69, 16);
   beam([needleX - 0.44, 0.29], [needleX + 0.44, 0.29], 0.020, 0.44, 6, 0.84);
   beam([needleX, 0.39], [needleX, 1.05], 0.018, 0.43, 6, 0.91);
 
   // London: Elizabeth Tower and its illuminated clock face.
   top = tower(-6.63, 0.48, 2.64, 0.48, { windows: 0.68 });
   rectangle(-6.91, top - 0.05, -6.35, top + 0.43, 0.34, 2, 0.62);
-  ellipse(-6.63, top + 0.19, 0.17, 0.17, 0.38, 5, 0.82, 20);
+  ellipse(-6.63, top + 0.19, 0.17, 0.17, 0.38, 10, 0.82, 20);
   polygon([[-6.91, top + 0.43], [-6.63, top + 0.81], [-6.35, top + 0.43]], 0.37, 2, 0.55);
   beam([-6.63, top + 0.81], [-6.63, top + 1.07], 0.02, 0.4, 6, 0.88);
 
@@ -394,7 +399,7 @@ export function createCityGeometry() {
       if (step) {
         const last = step - 1;
         quad([outer[last][0], outer[last][1], z], [outer[step][0], outer[step][1], z],
-          [inner[step][0], inner[step][1], z], [inner[last][0], inner[last][1], z], 2, 0.63);
+      [inner[step][0], inner[step][1], z], [inner[last][0], inner[last][1], z], 10, 0.63);
       }
     }
     outline(outer, z + 0.024, 6, 0.83, 0.019);
@@ -440,8 +445,8 @@ export function createCityGeometry() {
 
   // Shanghai: the Oriental Pearl Tower's stacked spheres and slender mast.
   beam([0.50, BASE], [0.50, 1.54], 0.045, 0.06, 2, 0.58);
-  ellipse(0.50, -0.44, 0.22, 0.22, 0.12, 5, 0.76, 18);
-  ellipse(0.50, 0.65, 0.16, 0.16, 0.13, 5, 0.81, 18);
+  ellipse(0.50, -0.44, 0.22, 0.22, 0.12, 10, 0.76, 18);
+  ellipse(0.50, 0.65, 0.16, 0.16, 0.13, 10, 0.81, 18);
   beam([0.50, 1.50], [0.50, 1.85], 0.017, 0.15, 6, 0.84);
 
   // An independent domed masjid anchors the foreground among the towers.
