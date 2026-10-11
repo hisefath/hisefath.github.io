@@ -58,7 +58,7 @@
     archive.classList.add('archive-spotlight-active');
     glowTimer = window.setTimeout(() => {
       archive.classList.remove('archive-spotlight-active');
-    }, 2000);
+    }, 5000);
   }, { threshold: [0, 0.2] });
 
   observer.observe(archive);

@@ -134,7 +134,7 @@ body[data-theme="dark"] :is(.ai-board, .project-card, .projects .project-card,
   }
 }
 
-/* A two-second warm, Siri-like light pass on each viewport entry. The pseudo
+/* A five-second warm, Siri-like light pass on each viewport entry. The pseudo
    elements exist only during the pulse so idle scrolling has no filter cost. */
 @property --archive-glow-angle {
   syntax: "<angle>";
@@ -147,7 +147,7 @@ body[data-theme="dark"] :is(.ai-board, .project-card, .projects .project-card,
   isolation: isolate;
 }
 .project-archive-cta.archive-spotlight-active {
-  animation: archive-halo 2s ease-out both;
+  animation: archive-halo 5s ease-out both;
 }
 .project-archive-cta.archive-spotlight-active::before,
 .project-archive-cta.archive-spotlight-active::after {
@@ -161,7 +161,7 @@ body[data-theme="dark"] :is(.ai-board, .project-card, .projects .project-card,
   -webkit-mask-composite: xor;
   mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   mask-composite: exclude;
-  animation: archive-glow-orbit 2s ease-in-out both, archive-glow-fade 2s ease-out both;
+  animation: archive-glow-orbit 5s ease-in-out both, archive-glow-fade 5s ease-out both;
 }
 .project-archive-cta.archive-spotlight-active::before {
   inset: -8px;
