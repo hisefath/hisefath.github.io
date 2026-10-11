@@ -108,6 +108,20 @@ export const fragmentShader = /* glsl */ `
   varying vec3 vWorldPosition;
 
   void main() {
+#ifdef GLASS_PASS
+    if (vKind < 9.5) discard;
+    // Thin amber-tinted glazing with a bright rim. The surface remains
+    // translucent after its individual triangles scatter.
+    vec3 width = fwidth(vBarycentric);
+    vec3 interior = smoothstep(width * 0.65, width * 2.4, vBarycentric);
+    float rim = 1.0 - min(min(interior.x, interior.y), interior.z);
+    float sheen = pow(max(0.0, 1.0 - abs(fract(vWorldPosition.x * 0.83 + vWorldPosition.y * 0.31) - 0.35) * 4.0), 4.0);
+    vec3 pane = mix(vec3(0.93, 0.61, 0.22), vec3(1.0, 0.88, 0.57), sheen * 0.52 + rim * vInfluence * 0.28);
+    float opacity = 0.23 + sheen * 0.11 + rim * (0.025 + vInfluence * 0.20) + vInfluence * 0.08;
+    gl_FragColor = vec4(pane, min(opacity, 0.56));
+    return;
+#else
+    if (vKind > 9.5) discard;
     // Charcoal structures sit against the amber Daybreak horizon.
     vec3 midnight = vec3(0.006, 0.009, 0.014);
     vec3 steel = vec3(0.035, 0.048, 0.058);
@@ -160,5 +174,6 @@ export const fragmentShader = /* glsl */ `
     // Every mast, jib, cab, cable, and hook uses one uninterrupted yellow.
     if (vCrane > 0.5) color = vec3(0.890, 0.569, 0.188);
     gl_FragColor = vec4(color, 1.0);
+#endif
   }
 `;
