@@ -395,6 +395,7 @@ body[data-theme="dark"] .projects .street-block,
 }
 
 .city-interaction-zone { display: none; }
+.hero-scroll-cue { display: none; }
 /* Long presses should operate the skyline rather than select page copy. */
 body, body * {
   -webkit-user-select: none;
@@ -411,12 +412,39 @@ input, textarea, [contenteditable="true"] {
     padding-top: clamp(72px, 10svh, 100px);
     padding-bottom: 65px;
   }
-  .hero-actions { flex-wrap: nowrap; gap: 8px; }
-  .hero-actions .button {
-    min-width: 0;
-    flex: 1;
-    gap: 6px;
-    padding: 12px;
+  .hero-actions { display: none; }
+  .hero-scroll-cue {
+    display: grid;
+    position: relative;
+    width: 34px;
+    height: 34px;
+    margin: 18px auto 0;
+    place-items: center;
+    border: 1px solid rgba(244, 181, 69, .28);
+    border-radius: 50%;
+    color: #f4bd57;
+    background: rgba(255, 255, 255, .015);
+    pointer-events: auto;
+    animation: hero-cue-glow 6s ease-in-out 6s infinite;
+  }
+  .hero-scroll-cue svg {
+    width: 16px;
+    height: 16px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.7;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .hero-scroll-cue::before {
+    content: "";
+    position: absolute;
+    inset: -5px;
+    border-radius: inherit;
+    border: 1px solid rgba(255, 197, 82, .8);
+    opacity: 0;
+    filter: blur(3px);
+    animation: hero-cue-halo 6s ease-in-out 6s infinite;
   }
   .portfolio-city-stage { pointer-events: none; touch-action: pan-y; }
   .city-interaction-zone {
@@ -428,4 +456,15 @@ input, textarea, [contenteditable="true"] {
     cursor: crosshair;
     touch-action: pan-y;
   }
+}
+@keyframes hero-cue-glow {
+  0%, 7%, 25%, 100% { box-shadow: none; }
+  14% { box-shadow: 0 0 8px rgba(255, 184, 58, .65), 0 0 22px rgba(255, 153, 26, .28); }
+}
+@keyframes hero-cue-halo {
+  0%, 7%, 25%, 100% { opacity: 0; transform: scale(.9); }
+  14% { opacity: .9; transform: scale(1.18); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-scroll-cue, .hero-scroll-cue::before { animation: none; }
 }
