@@ -6,6 +6,7 @@ import { initWorkflowScene } from './workflow.js';
 
 const SKYLINE_BASE = -2.32;
 const GROUND_MARGIN = 0.06;
+const LAPTOP_GROUND_LIFT = 0.38;
 const PANORAMA_SPAN = 24;
 const PANORAMA_START = -8;
 const stage = document.querySelector('#portfolio-city-stage');
@@ -169,8 +170,8 @@ if (stage) {
       camera.top = viewHeight / 2;
       camera.bottom = -viewHeight / 2;
       camera.updateProjectionMatrix();
-      // Keep the ground line just inside the canvas edge at every viewport size.
-      group.position.y = camera.bottom + GROUND_MARGIN - SKYLINE_BASE;
+      // Leave a visible strip of ground on laptops; preserve mobile framing.
+      group.position.y = camera.bottom + GROUND_MARGIN + (width > 800 ? LAPTOP_GROUND_LIFT : 0) - SKYLINE_BASE;
       renderer.setSize(width, height, false);
       renderer.render(scene, camera);
     }
