@@ -415,15 +415,17 @@ input, textarea, [contenteditable="true"] {
   .hero-actions { display: none; }
   .hero-scroll-cue {
     display: grid;
-    position: relative;
+    position: absolute;
+    z-index: 4;
+    right: 20px;
+    bottom: clamp(92px, 13svh, 140px);
     width: 34px;
     height: 34px;
-    margin: 18px auto 0;
     place-items: center;
-    border: 1px solid rgba(244, 181, 69, .28);
+    border: 1px solid rgba(244, 181, 69, .52);
     border-radius: 50%;
     color: #f4bd57;
-    background: rgba(255, 255, 255, .015);
+    background: rgba(7, 9, 13, .74);
     pointer-events: auto;
     animation: hero-cue-glow 6s ease-in-out 6s infinite;
   }
