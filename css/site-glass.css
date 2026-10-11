@@ -382,18 +382,20 @@ body[data-theme="dark"] .projects .street-block,
   border-color: rgba(255, 255, 255, .25);
 }
 
-/* Give the skyline a full viewport on laptops; keep copy within that height. */
+/* Fit the laptop hero below the 78px header so the skyline reaches the visible fold. */
 @media (min-width: 801px) {
-  .hero.section-wrap { min-height: 100svh; }
+  .hero.section-wrap { min-height: calc(100svh - 78px); }
   .hero-copy {
     padding-top: clamp(105px, 14svh, 150px);
     padding-bottom: clamp(70px, 10svh, 115px);
   }
 }
-@media (min-width: 801px) and (max-width: 1200px) and (min-height: 1501px) {
-  .hero.section-wrap { min-height: 1500px; }
+@media (min-width: 801px) and (max-height: 740px) {
+  .hero-copy {
+    padding-top: clamp(70px, 10svh, 105px);
+    padding-bottom: clamp(38px, 6svh, 70px);
+  }
 }
-
 .city-interaction-zone { display: none; }
 .hero-scroll-cue { display: none; }
 /* Long presses should operate the skyline rather than select page copy. */
