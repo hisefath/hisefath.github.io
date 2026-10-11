@@ -38,28 +38,31 @@
   if (!reducedMotion.matches) timer = window.setTimeout(pulse, 4100);
 })();
 
-/* One brief highlight per viewport entry. Leaving the viewport rearms it. */
+/* One five-second highlight per viewport entry. Leaving the viewport rearms it. */
 (() => {
-  const archive = document.querySelector('.project-archive-cta');
-  if (!archive || !('IntersectionObserver' in window)) return;
+  const targets = document.querySelectorAll('.viewport-glow-target');
+  if (!targets.length || !('IntersectionObserver' in window)) return;
 
-  let triggeredThisEntry = false;
-  let glowTimer;
-  const observer = new IntersectionObserver(([entry]) => {
-    if (!entry.isIntersecting) {
-      triggeredThisEntry = false;
-      window.clearTimeout(glowTimer);
-      archive.classList.remove('archive-spotlight-active');
-      return;
+  const triggered = new WeakSet();
+  const timers = new WeakMap();
+  const observer = new IntersectionObserver((entries) => {
+    for (const entry of entries) {
+      const element = entry.target;
+      if (!entry.isIntersecting) {
+        triggered.delete(element);
+        window.clearTimeout(timers.get(element));
+        element.classList.remove('is-viewport-glowing');
+        continue;
+      }
+      if (entry.intersectionRatio < 0.2 || triggered.has(element) || document.hidden) continue;
+
+      triggered.add(element);
+      element.classList.add('is-viewport-glowing');
+      timers.set(element, window.setTimeout(() => {
+        element.classList.remove('is-viewport-glowing');
+      }, 5000));
     }
-    if (entry.intersectionRatio < 0.2 || triggeredThisEntry || document.hidden) return;
-
-    triggeredThisEntry = true;
-    archive.classList.add('archive-spotlight-active');
-    glowTimer = window.setTimeout(() => {
-      archive.classList.remove('archive-spotlight-active');
-    }, 5000);
   }, { threshold: [0, 0.2] });
 
-  observer.observe(archive);
+  targets.forEach((element) => observer.observe(element));
 })();
