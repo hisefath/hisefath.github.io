@@ -1,0 +1,135 @@
+/* Clear optical surfaces for the active portfolio pages. The backdrop blur is
+   Gaussian; highlights and edge contrast create the lens without a color fill. */
+body[data-theme="dark"] {
+  --glass-clear: rgba(255, 255, 255, .025);
+  --glass-rim: rgba(255, 255, 255, .36);
+  --glass-glow: rgba(242, 166, 54, .31);
+}
+
+body[data-theme="dark"] .nav-shell {
+  position: relative;
+  isolation: isolate;
+  border: 1px solid rgba(255, 255, 255, .28);
+  background: linear-gradient(163deg, rgba(255, 255, 255, .10), rgba(255, 255, 255, .018) 38%, rgba(255, 255, 255, .035) 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .46), inset 0 -1px 0 rgba(255, 255, 255, .08), 0 12px 38px rgba(0, 0, 0, .24);
+  -webkit-backdrop-filter: blur(24px) saturate(105%);
+  backdrop-filter: blur(24px) saturate(105%);
+}
+
+/* Functional controls all share a clear lens and an inner white reflection. */
+body[data-theme="dark"] :is(
+  .hero-actions .button, .workflow-actions .button,
+  .gallery-filter, .gallery-empty button, .preview-control,
+  .home-preview-control, .social-icon,
+  .workflow-jump a
+) {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, .30);
+  background: linear-gradient(155deg, rgba(255, 255, 255, .095), rgba(255, 255, 255, .015) 38%, rgba(255, 255, 255, .035) 100%);
+  color: #f8f8f5;
+  -webkit-backdrop-filter: blur(18px) saturate(105%);
+  backdrop-filter: blur(18px) saturate(105%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .50), inset 1px 0 0 rgba(255, 255, 255, .11), inset 0 -1px 0 rgba(255, 255, 255, .08), 0 9px 25px rgba(0, 0, 0, .17);
+  transition: transform .28s cubic-bezier(.2, .7, .2, 1), border-color .28s ease, box-shadow .28s ease, background .28s ease, color .28s ease;
+}
+
+body[data-theme="dark"] :is(
+  .hero-actions .button, .workflow-actions .button,
+  .gallery-filter, .gallery-empty button, .preview-control,
+  .home-preview-control, .social-icon,
+  .workflow-jump a
+)::before {
+  content: "";
+  position: absolute;
+  inset: -75% 22% 53% -12%;
+  z-index: -1;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .28);
+  filter: blur(15px);
+  pointer-events: none;
+}
+
+body[data-theme="dark"] :is(
+  .hero-actions .button, .workflow-actions .button,
+  .gallery-filter, .gallery-empty button, .preview-control,
+  .home-preview-control, .social-icon,
+  .workflow-jump a
+):is(:hover, :focus-visible) {
+  transform: translateY(-2px);
+  border-color: rgba(255, 224, 166, .72);
+  background: linear-gradient(155deg, rgba(255, 255, 255, .14), rgba(255, 255, 255, .035) 42%, rgba(255, 255, 255, .055));
+  color: #fff9ef;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .72), inset 1px 0 0 rgba(255, 255, 255, .16), inset 0 -1px 0 rgba(255, 204, 117, .24), 0 0 0 1px rgba(255, 185, 73, .10), 0 0 22px var(--glass-glow), 0 12px 28px rgba(0, 0, 0, .20);
+}
+
+body[data-theme="dark"] :is(.hero-actions .button, .workflow-actions .button):active,
+body[data-theme="dark"] :is(.gallery-filter, .preview-control, .home-preview-control):active {
+  transform: translateY(0) scale(.985);
+}
+
+body[data-theme="dark"] :is(.gallery-filter, .gallery-empty button,
+  .preview-control, .home-preview-control,
+  .workflow-jump a, .nav-links a):focus-visible {
+  outline: 2px solid #ffd27b;
+  outline-offset: 3px;
+}
+
+body[data-theme="dark"] :is(.hero-actions .button-primary, .workflow-actions .button-primary, .gallery-filter.is-active) {
+  border-color: rgba(255, 218, 145, .58);
+  background: linear-gradient(155deg, rgba(255, 255, 255, .095), rgba(255, 255, 255, .015) 38%, rgba(255, 255, 255, .035));
+  color: #ffd488;
+}
+
+body[data-theme="dark"] :is(.gallery-filter.is-active, .gallery-filter[aria-pressed="true"]):is(:hover, :focus-visible) {
+  background: linear-gradient(155deg, rgba(255, 255, 255, .14), rgba(255, 255, 255, .035) 42%, rgba(255, 255, 255, .055));
+  color: #fff9ef;
+}
+
+body[data-theme="dark"] .nav-links a {
+  border: 1px solid transparent;
+  border-radius: 999px;
+  transition: background .24s ease, border-color .24s ease, box-shadow .24s ease, color .24s ease;
+}
+body[data-theme="dark"] .nav-links a:is(:hover, :focus-visible, [aria-current="page"]) {
+  border-color: rgba(255, 255, 255, .26);
+  background: rgba(255, 255, 255, .07);
+  color: #fffaf1;
+  box-shadow: inset 0 1px rgba(255, 255, 255, .29), 0 0 17px rgba(242, 166, 54, .16);
+}
+
+body[data-theme="dark"] .social-panel a:is(:hover, :focus-visible) .social-icon {
+  border-color: rgba(255, 224, 166, .7);
+  background: rgba(255, 255, 255, .075);
+  box-shadow: inset 0 1px rgba(255, 255, 255, .54), 0 0 17px rgba(242, 166, 54, .24);
+}
+
+body[data-theme="dark"] :is(.tag-list span, .gallery-tags span, .skill-icon, .gallery-search, .project-preview-label, .media-label) {
+  border-color: rgba(255, 255, 255, .26);
+  background: linear-gradient(160deg, rgba(255, 255, 255, .065), rgba(255, 255, 255, .015) 48%, rgba(255, 255, 255, .035));
+  box-shadow: inset 0 1px rgba(255, 255, 255, .32), inset 0 -1px rgba(255, 255, 255, .055);
+  -webkit-backdrop-filter: blur(13px) saturate(105%);
+  backdrop-filter: blur(13px) saturate(105%);
+}
+body[data-theme="dark"] .gallery-search:focus-within {
+  border-color: rgba(255, 218, 145, .66);
+  box-shadow: inset 0 1px rgba(255, 255, 255, .42), 0 0 22px rgba(242, 166, 54, .20);
+}
+
+/* Broad content panels stay quiet so the floating controls remain legible. */
+body[data-theme="dark"] :is(.ai-board, .project-card, .projects .project-card,
+  .project-archive-cta, .gallery-card, .factory-note, .decision-card,
+  .hero-system, .ownership-grid article) {
+  background: rgba(255, 255, 255, .02);
+  border-color: rgba(255, 255, 255, .17);
+  box-shadow: inset 0 1px rgba(255, 255, 255, .21), 0 18px 44px rgba(0, 0, 0, .17);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body[data-theme="dark"] :is(.hero-actions .button, .workflow-actions .button,
+    .gallery-filter, .gallery-empty button, .preview-control,
+    .home-preview-control, .social-icon, .workflow-jump a) {
+    transition: none;
+  }
+}
