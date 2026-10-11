@@ -473,6 +473,52 @@ export function createCityGeometry() {
     [7.82, 1.55, 0.60, -1, -0.24, 0.16],
   ]) crane(x, height, length, direction, z, baseOffset);
 
+  // The additional block is revealed as the panorama travels. Its silhouette
+  // mixes recognizable towers with open floors and active construction.
+  for (const [x, width, height] of [
+    [8.60, 0.34, 1.10], [9.52, 0.28, 1.02], [10.58, 0.36, 1.30],
+    [11.85, 0.38, 1.16], [13.45, 0.31, 1.22], [14.72, 0.35, 1.08],
+    [15.66, 0.34, 0.96],
+  ]) tower(x, width, height, 0.19, { z: -0.36, background: true });
+
+  // Chicago: Willis Tower's grouped setbacks and paired antennas.
+  top = tower(8.78, 0.66, 2.44, 0.52, { windows: 0.58 });
+  tower(8.57, 0.24, 0.56, 0.58, { base: top, windows: 0.7 });
+  tower(8.97, 0.23, 0.42, 0.56, { base: top, windows: 0.7 });
+  beam([8.58, top + 0.55], [8.58, top + 1.00], 0.018, 0.36, 6, 0.82);
+  beam([8.97, top + 0.41], [8.97, top + 0.88], 0.018, 0.36, 6, 0.82);
+
+  // Toronto: CN Tower's long shaft, observation decks, and needle.
+  const cnX = 10.08;
+  beam([cnX - 0.18, BASE], [cnX - 0.055, 0.81], 0.055, 0.30, 2, 0.57);
+  beam([cnX + 0.18, BASE], [cnX + 0.055, 0.81], 0.055, 0.30, 2, 0.57);
+  beam([cnX, BASE], [cnX, 1.35], 0.05, 0.34, 2, 0.62);
+  ellipse(cnX, 0.64, 0.34, 0.12, 0.40, 10, 0.73, 18);
+  ellipse(cnX, 0.78, 0.24, 0.08, 0.42, 10, 0.63, 18);
+  beam([cnX - 0.29, 0.64], [cnX + 0.29, 0.64], 0.015, 0.44, 6, 0.8);
+  beam([cnX, 1.30], [cnX, 1.91], 0.016, 0.43, 6, 0.88);
+
+  // Singapore: the three towers and elevated deck of Marina Bay Sands.
+  for (const x of [11.10, 11.64, 12.18]) {
+    tower(x, 0.35, 2.04, 0.46, { windows: 0.57 });
+    beam([x - 0.17, BASE + 1.72], [x + 0.17, BASE + 1.72], 0.018, 0.34, 8, 0.48);
+  }
+  polygon([[10.83, -0.15], [12.49, -0.15], [12.55, 0.00], [10.96, 0.02]], 0.43, 10, 0.62);
+  outline([[10.83, -0.13], [12.49, -0.13], [12.55, 0.00], [10.96, 0.02]], 0.48, 6, 0.79, 0.018);
+
+  // Riyadh: Kingdom Centre's framed opening and narrowing crown.
+  top = tower(13.30, 0.56, 2.65, 0.49, { windows: 0.62 });
+  for (const side of [-1, 1]) {
+    beam([13.30 + side * 0.26, top - 0.36], [13.30 + side * 0.13, top + 0.42], 0.048, 0.37, 2, 0.56);
+  }
+  beam([13.17, top + 0.42], [13.43, top + 0.42], 0.026, 0.39, 6, 0.77);
+  beam([13.10, top + 0.13], [13.50, top + 0.13], 0.019, 0.40, 6, 0.68);
+
+  constructionTower(14.38, 0.46, 2.34, 0.72, 0.48);
+  constructionTower(15.28, 0.43, 1.91, 0.78, 0.45);
+  crane(14.42, 1.16, 0.72, -1, 0.55, 1.30);
+  crane(15.52, 2.11, 0.64, -1, -0.15, 0.03);
+
   const triangleCount = faceIndex;
   // A modest reduction in moving faces keeps the original scatter physics.
   // Tiny window panes mostly stay anchored to avoid visual noise.

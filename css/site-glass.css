@@ -392,6 +392,16 @@ body[data-theme="dark"] .projects .street-block,
 }
 
 .city-interaction-zone { display: none; }
+/* Long presses should operate the skyline rather than select page copy. */
+body, body * {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+input, textarea, [contenteditable="true"] {
+  -webkit-user-select: text;
+  user-select: text;
+}
 @media (max-width: 700px) {
   .hero.section-wrap { min-height: calc(100svh - 100px); }
   .hero-copy {
@@ -411,7 +421,7 @@ body[data-theme="dark"] .projects .street-block,
     position: absolute;
     z-index: 3;
     inset: auto 0 0;
-    height: 36%;
+    height: 40%;
     cursor: crosshair;
     touch-action: pan-y;
   }
