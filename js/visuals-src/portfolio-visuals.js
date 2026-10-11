@@ -154,7 +154,10 @@ if (stage) {
       const width = stage.clientWidth;
       const height = stage.clientHeight;
       if (!width || !height) return;
-      const viewWidth = width < 700 ? 6.7 : 15.2;
+      // Keep the landmark scale legible on narrower laptop windows. A fixed
+      // desktop span made their height shrink with viewport width, leaving a
+      // tall empty band above the skyline.
+      const viewWidth = width < 700 ? 6.7 : Math.min(15.2, Math.max(9.6, width / 100));
       const viewHeight = viewWidth * height / width;
       camera.left = -viewWidth / 2;
       camera.right = viewWidth / 2;
