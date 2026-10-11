@@ -11,7 +11,7 @@
   function pulse() {
     clearGlow();
     if (!document.hidden && !reducedMotion.matches) {
-      const candidates = [...document.querySelectorAll('.hero-system, .decision-card, .ownership-grid article, .layer-list details[open], .ai-board, .project-archive-cta, .projects .project-card, .gallery-card')]
+      const candidates = [...document.querySelectorAll('.hero-system, .decision-card, .ownership-grid article, .layer-list details[open], .ai-board, .projects .project-card, .gallery-card')]
         .filter((element) => {
           const box = element.getBoundingClientRect();
           return box.bottom > 80 && box.top < window.innerHeight - 80;
@@ -36,4 +36,30 @@
     if (!reducedMotion.matches) pulse();
   });
   if (!reducedMotion.matches) timer = window.setTimeout(pulse, 4100);
+})();
+
+/* One brief highlight per viewport entry. Leaving the viewport rearms it. */
+(() => {
+  const archive = document.querySelector('.project-archive-cta');
+  if (!archive || !('IntersectionObserver' in window)) return;
+
+  let triggeredThisEntry = false;
+  let glowTimer;
+  const observer = new IntersectionObserver(([entry]) => {
+    if (!entry.isIntersecting) {
+      triggeredThisEntry = false;
+      window.clearTimeout(glowTimer);
+      archive.classList.remove('archive-spotlight-active');
+      return;
+    }
+    if (entry.intersectionRatio < 0.2 || triggeredThisEntry || document.hidden) return;
+
+    triggeredThisEntry = true;
+    archive.classList.add('archive-spotlight-active');
+    glowTimer = window.setTimeout(() => {
+      archive.classList.remove('archive-spotlight-active');
+    }, 2000);
+  }, { threshold: [0, 0.2] });
+
+  observer.observe(archive);
 })();

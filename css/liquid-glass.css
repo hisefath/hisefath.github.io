@@ -133,3 +133,65 @@ body[data-theme="dark"] :is(.ai-board, .project-card, .projects .project-card,
     transition: none;
   }
 }
+
+/* A two-second warm, Siri-like light pass on each viewport entry. The pseudo
+   elements exist only during the pulse so idle scrolling has no filter cost. */
+@property --archive-glow-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+.project-archive-cta {
+  position: relative;
+  isolation: isolate;
+}
+.project-archive-cta.archive-spotlight-active {
+  animation: archive-halo 2s ease-out both;
+}
+.project-archive-cta.archive-spotlight-active::before,
+.project-archive-cta.archive-spotlight-active::after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  pointer-events: none;
+  border-radius: inherit;
+  background: conic-gradient(from var(--archive-glow-angle), transparent 0deg, rgba(255, 255, 255, .18) 35deg, #ffe6a5 75deg, #f7b44c 115deg, #e7862c 150deg, transparent 205deg, transparent 360deg);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  animation: archive-glow-orbit 2s ease-in-out both, archive-glow-fade 2s ease-out both;
+}
+.project-archive-cta.archive-spotlight-active::before {
+  inset: -8px;
+  padding: 8px;
+  filter: blur(13px);
+  opacity: .72;
+}
+.project-archive-cta.archive-spotlight-active::after {
+  inset: -2px;
+  padding: 2px;
+  box-shadow: 0 0 22px rgba(245, 166, 57, .12);
+}
+@keyframes archive-glow-orbit { to { --archive-glow-angle: 360deg; } }
+@keyframes archive-halo {
+  0%, 100% { box-shadow: inset 0 1px rgba(255, 255, 255, .21), 0 18px 44px rgba(0, 0, 0, .17); }
+  18%, 66% { box-shadow: inset 0 1px rgba(255, 255, 255, .42), 0 0 23px rgba(255, 211, 124, .42), 0 0 55px rgba(235, 137, 34, .24), 0 18px 44px rgba(0, 0, 0, .17); }
+}
+@keyframes archive-glow-fade {
+  0% { opacity: 0; }
+  16%, 62% { opacity: 1; }
+  100% { opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .project-archive-cta.archive-spotlight-active {
+    animation: none;
+    box-shadow: inset 0 1px rgba(255, 255, 255, .32), 0 0 24px rgba(255, 211, 124, .25);
+  }
+  .project-archive-cta.archive-spotlight-active::before,
+  .project-archive-cta.archive-spotlight-active::after {
+    animation: none;
+    background: linear-gradient(120deg, rgba(255, 230, 165, .55), rgba(247, 180, 76, .68));
+  }
+}
